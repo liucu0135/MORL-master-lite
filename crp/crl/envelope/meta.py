@@ -159,15 +159,13 @@ class MetaAgent(object):
         else:
             print('pref_mean:{}, pref_cov:{}'.format(self.preference_mean, self.preference_cov))
             self.w_kept = None
-            if self.epsilon_decay:
-                # self.epsilon -= self.epsilon_delta
-                if self.epsilon>0.001:
-                    self.epsilon *= 0.95# self.beta_delta
-            if self.homotopy:
-                if self.beta<0.95:
-                    self.beta += 0.01# self.beta_delta
-                else:
-                    self.beta=0.95
+            # if self.epsilon_decay:
+            #     # self.epsilon -= self.epsilon_delta
+            #     if self.epsilon>0.001:
+            #         self.epsilon *= 0.95# self.beta_delta
+            # if self.homotopy:
+            #     if self.beta<0.95:
+            #         self.beta += 0.01# self.beta_delta
                     # self.beta_delta = (self.beta-self.beta_init)*self.beta_expbase+self.beta_init-self.beta
             p = abs(wr - wq)
         p += 1e-5
@@ -280,7 +278,7 @@ class MetaAgent(object):
 
             # loss = F.mse_loss(Q.view(-1), Tau_Q.view(-1))
             loss = self.beta * F.mse_loss(wQ.view(-1), wTQ.view(-1))
-            loss += (1-self.beta) * F.mse_loss(Q.view(-1), Tau_Q.view(-1))
+            loss += (1-min(self.beta_uplim,self.beta)) * F.mse_loss(Q.view(-1), Tau_Q.view(-1))
 
             self.optimizer.zero_grad()
             loss.backward()
@@ -299,12 +297,14 @@ class MetaAgent(object):
         self.w_kept = None
         if self.epsilon_decay:
             if self.epsilon>0.001:
-                self.epsilon *=0.9
+                self.epsilon *=0.8
                 # print('eps:{}'.format(self.epsilon))
             # self.epsilon -= self.epsilon_delta
         if self.homotopy:
-            self.beta += self.beta_delta
-            self.beta_delta = (self.beta-self.beta_init)*self.beta_expbase+self.beta_init-self.beta
+            if self.beta<0.95:
+                self.beta += 0.02# self.beta_delta
+            # self.beta += self.beta_delta
+            # self.beta_delta = (self.beta-self.beta_init)*self.beta_expbase+self.beta_init-self.beta
 
     def predict(self, probe, initial_state=None):
         if initial_state is None:
