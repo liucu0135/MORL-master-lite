@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from utils.monitor import Monitor
 from envs.mo_env import MultiObjectiveEnv
-
+import time
 parser = argparse.ArgumentParser(description='MORL')
 # CONFIG
 parser.add_argument('--env-name', default='crp', metavar='ENVNAME',
@@ -81,21 +81,32 @@ def train(env, agent, args):
             probe = FloatTensor([0.8, 0.2, 0.0, 0.0, 0.0, 0.0])
 
         while not terminal:
+            t_now = time.time()
             state = env.observe()
+            t_obs=time.time()-t_now
+            t_now = time.time()
             if args.env_name == "crp":
                 mask=env.env.get_action_out_mask()
             action = agent.act(state, mask=mask)
+            t_policy=time.time()-t_now
+            t_now = time.time()
             next_state, reward, terminal = env.step(action, step=min(1,num_eps/30))
+            t_step=time.time()-t_now
             if args.env_name == "crp":
                 next_mask=env.env.get_action_out_mask()
             if args.log:
                 monitor.add_log(state, action, reward, terminal, agent.w_kept)
-
+            t_now = time.time()
             agent.memorize(state, action, next_state, reward, terminal, mask, next_mask)
+            t_mem=time.time()-t_now
+            t_now = time.time()
             loss += agent.learn()
+            t_learn=time.time()-t_now
             if terminal:
                 # terminal = True
+                t_now = time.time()
                 agent.reset()
+                t_reset = time.time() - t_now
             tot_reward = tot_reward + (probe.cpu().numpy().dot(reward))
             act1+=reward[0]
             act2+=reward[1]
@@ -131,6 +142,15 @@ def train(env, agent, args):
             act_2,
             # q__max,
             loss / cnt,tot_reward_nc,tot_reward_dist, agent.beta, agent.epsilon))
+        print("t_obs : %0.2f;t_policy : %0.2f;t_step : %0.2f;t_mem : %0.2f;t_learn : %0.2f;t_reset : %0.2f" % (
+            t_obs,
+            t_policy,
+            t_step,
+            t_mem,
+            t_learn,
+            t_reset,))
+
+
         monitor.update(num_eps,
                        tot_reward,
                        act_1,
@@ -139,6 +159,8 @@ def train(env, agent, args):
                        loss / cnt)
         if (num_eps) % 10 == 0:
             agent.save(args.save, "m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name))
+
+
     # agent.save(args.save, "m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name))
 
 
