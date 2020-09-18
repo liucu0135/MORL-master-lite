@@ -89,7 +89,7 @@ class MetaAgent(object):
 
                 self.w_kept = (torch.abs(self.w_kept) / \
                                torch.norm(self.w_kept, p=1)).type(FloatTensor)
-                print('exploration preference: {}'.format(self.w_kept))
+                # print('exploration preference: {}'.format(self.w_kept))
 
             preference = self.w_kept
         state = torch.from_numpy(state).type(FloatTensor)
@@ -157,7 +157,7 @@ class MetaAgent(object):
             whq = preference.dot(hq)
             p = abs(wr + self.gamma * whq - wq)
         else:
-            print('pref_mean:{}, pref_cov:{}'.format(self.preference_mean, self.preference_cov))
+            # print('pref_mean:{}, pref_cov:{}'.format(self.preference_mean, self.preference_cov))
             self.w_kept = None
             # if self.epsilon_decay:
             #     # self.epsilon -= self.epsilon_delta
