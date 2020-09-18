@@ -18,25 +18,12 @@ class EnvelopeConvCQN(torch.nn.Module):
         Linear Controllable Q-Network, Envelope Version
     '''
 
-    def __init__(self, state_size, action_size, reward_size):
+    def __init__(self, state_size, action_size, reward_size, para_reduce=1):
         super(EnvelopeConvCQN, self).__init__()
         self.include_last=True
-
         self.state_size = state_size
         self.action_size = action_size
         self.reward_size = reward_size
-        # network_scale=4
-        # # S x A -> (W -> R^n). =>. S x W -> (A -> R^n)
-        # self.affine1 = nn.Linear(state_size + reward_size,
-        #                          (state_size + reward_size) * network_scale * 1)  # used to be 16, 32, 64
-        # self.affine2 = nn.Linear((state_size + reward_size) * network_scale * 1,
-        #                          (state_size + reward_size) * network_scale * 2)
-        # self.affine3 = nn.Linear((state_size + reward_size) * network_scale * 2,
-        #                          (state_size + reward_size) * network_scale * 4)
-        # self.affine4 = nn.Linear((state_size + reward_size) * network_scale * 4,
-        #                          (state_size + reward_size) * network_scale * 2)
-        # self.affine5 = nn.Linear((state_size + reward_size) * network_scale * 2,
-        #                          action_size * reward_size)
         self.color_num = 10
         self.m = 5
         self.c = 10
