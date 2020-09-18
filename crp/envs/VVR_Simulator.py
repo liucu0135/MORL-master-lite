@@ -9,7 +9,7 @@ import pandas as pd
 #   2. create self.terminal: count remaining orders inside sim object
 #   3. create self.reward:   calculate reward inside sim object
 class VVR_Simulator():
-    def __init__(self, num_color=10, num_model=5, capacity=21, num_lanes=5, on=300, lane_length=6):
+    def __init__(self, num_color=20, num_model=10, capacity=21, num_lanes=7, on=300, lane_length=8):
         self.num_color = num_color
         self.num_model = num_model
         self.num_lanes = num_lanes
@@ -134,7 +134,7 @@ class VVR_Simulator():
     def observe(self):
         s1, s2=self.get_out_tensor()
         s1=s1.view(-1,1)    # model x num_lanes x length+2
-        s2=s2.view(-1,1)    # model+6  x  model
+        s2=s2.view(-1,1)    # model+6  x  color
         s=torch.cat((s1,s2),dim=0) #
         # l=len(s)-self.num_model*self.num_color*(self.lane_length+2)-(max(self.num_color,self.num_model)+6)*(max(self.num_color,self.num_model))
         return s.squeeze().numpy()
