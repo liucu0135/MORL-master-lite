@@ -32,7 +32,7 @@ parser.add_argument('--episode-num', type=int, default=40, metavar='EN',
                     help='number of episodes for training')
 parser.add_argument('--optimizer', default='Adam', metavar='OPT',
                     help='optimizer: Adam | RMSprop')
-parser.add_argument('--update-freq', type=int, default=2000, metavar='OPT',
+parser.add_argument('--update-freq', type=int, default=1000, metavar='OPT',
                     help='optimizer: Adam | RMSprop')
 parser.add_argument('--beta', type=float, default=0.01, metavar='BETA',
                     help='(initial) beta for evelope algorithm, default = 0.01')
