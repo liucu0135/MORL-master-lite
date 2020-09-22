@@ -32,7 +32,7 @@ parser.add_argument('--episode-num', type=int, default=40, metavar='EN',
                     help='number of episodes for training')
 parser.add_argument('--optimizer', default='Adam', metavar='OPT',
                     help='optimizer: Adam | RMSprop')
-parser.add_argument('--update-freq', type=int, default=2000, metavar='OPT',
+parser.add_argument('--update-freq', type=int, default=4000, metavar='OPT',
                     help='optimizer: Adam | RMSprop')
 parser.add_argument('--beta', type=float, default=0.01, metavar='BETA',
                     help='(initial) beta for evelope algorithm, default = 0.01')
@@ -43,7 +43,7 @@ parser.add_argument('--serialize', default=False, action='store_true',
                     help='serialize a model')
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='path for saving trained models')
-parser.add_argument('--name', default='even_sample_homotopy_shaped_200epoch', metavar='name',
+parser.add_argument('--name', default='even_sample_homotopy_shaped_300epoch', metavar='name',
                     help='specify a name for saving the model')
 parser.add_argument('--log', default='crl/envelope/logs/', metavar='LOG',
                     help='path for recording training informtion')
@@ -166,7 +166,7 @@ def train(env, agent, args):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    args.episode_num = 200
+    args.episode_num = 300
     # setup the environment
     env = MultiObjectiveEnv(args.env_name)
     torch.cuda.set_device(0)

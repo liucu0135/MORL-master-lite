@@ -36,7 +36,7 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 # LOG & SAVING
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
-parser.add_argument('--name', default='even_sample_homotopy_shaped_200epoch', metavar='name',
+parser.add_argument('--name', default='even_sample_homotopy_shaped_300epoch', metavar='name',
                     help='specify a name for saving the model')
 # Useless but I am too laze to delete them
 parser.add_argument('--mem-size', type=int, default=10000, metavar='M',

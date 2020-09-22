@@ -24,9 +24,9 @@ class EnvelopeConvCQN(torch.nn.Module):
         self.state_size = state_size
         self.action_size = action_size
         self.reward_size = reward_size
-        self.color_num = 20
+        self.color_num = 10
         self.m = 10
-        self.c = 20
+        self.c = 10
         self.fcnum = (7 * (8 + 2))
         self.num_lane = 7
         self.ccm=None
@@ -100,8 +100,8 @@ class EnvelopeConvCQN(torch.nn.Module):
         #   360=5*5*8+16*10
         s_num = int(preference.size(0) / w_num)
         a_num = self.color_num
-        state = s[:,:10*7*10].view(-1,10,7,10)
-        tab_mc = s[:,10*7*10:].view(-1,26,20)
+        state = s[:,:10*7*10].view(-1,10,7,self.m)
+        tab_mc = s[:,10*7*10:].view(-1,self.c+6,self.c)
         # if not training means the batch size doesn't exist, unsqueezing the data to match dimension
         if not self.training:
             state = state.unsqueeze(0)
