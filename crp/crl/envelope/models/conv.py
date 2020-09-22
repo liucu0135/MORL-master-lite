@@ -43,9 +43,12 @@ class EnvelopeConvCQN(torch.nn.Module):
         ]
 
         conv1 = [
-            nn.Conv2d(4 + self.include_last * 2, 8, 3, 1, 1),
+            nn.Conv2d(4 + self.include_last * 2, 32, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(8, 32, 3, 1, 1),
+            nn.Conv2d(32, 32, 3, 1, 1),
+            nn.ReLU(),
+            nn.MaxPool2d(3, 2, 1),
+            nn.Conv2d(32, 32, 3, 1, 1),
             nn.ReLU(),
             nn.Conv2d(32, 32, 3, 1, 1),
             nn.ReLU(),
@@ -56,7 +59,7 @@ class EnvelopeConvCQN(torch.nn.Module):
             nn.ReLU(),
         ]
         fc1 = [
-            nn.Linear(32 * self.c * self.m, 256),
+            nn.Linear(32 * self.c * self.m//4, 256),
             nn.ReLU(),
         ]
         fc_fuse = [
@@ -133,7 +136,7 @@ class EnvelopeConvCQN(torch.nn.Module):
 
 
         x1 = self.conv1(x)
-        x1 = self.fc1(x1.view(-1, 32 * self.c * self.m))
+        x1 = self.fc1(x1.view(-1, 32 * self.c * self.m//4))
         x2 = self.conv0(state)
         x2 = self.fc0(x2.view(-1, 32 * self.fcnum))
         x = self.fc_fuse(torch.cat((x1, x2, preference), dim=1))
