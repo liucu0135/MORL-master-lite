@@ -159,6 +159,7 @@ def train(env, agent, args):
                        loss / cnt)
         if (num_eps) % 10 == 0:
             agent.save(args.save, "m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name))
+            agent.save(args.save, "m.{}_e.{}_n.{}.ep{}".format(args.model, args.env_name, args.name, num_eps//100))
 
 
     # agent.save(args.save, "m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name))
