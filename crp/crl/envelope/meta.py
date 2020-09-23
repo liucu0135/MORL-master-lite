@@ -302,7 +302,7 @@ class MetaAgent(object):
             # self.epsilon -= self.epsilon_delta
         if self.homotopy:
             if self.beta<0.95:
-                self.beta += 0.05# self.beta_delta
+                self.beta += 0.01# self.beta_delta
             # self.beta += self.beta_delta
             # self.beta_delta = (self.beta-self.beta_init)*self.beta_expbase+self.beta_init-self.beta
 
