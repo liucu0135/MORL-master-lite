@@ -137,7 +137,7 @@ class EnvelopeConvCQN(torch.nn.Module):
 
 
         x1 = self.conv1(x)
-        x1 = self.fc1(x1.view(-1, 32 * self.c * self.m//4))
+        x1 = self.fc1(x1.view(-1, 32 * self.c * self.m))
         x2 = self.conv0(state)
         x2 = self.fc0(x2.view(-1, 8 * self.fcnum))
         x = self.fc_fuse(torch.cat((x1, x2, preference), dim=1))

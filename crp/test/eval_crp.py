@@ -68,7 +68,7 @@ vis = visdom.Visdom()
 assert vis.check_connection()
 
 use_cuda = torch.cuda.is_available()
-torch.cuda.device(1)
+# torch.cuda.device(1)
 FloatTensor = torch.cuda.FloatTensor if use_cuda else torch.FloatTensor
 LongTensor = torch.cuda.LongTensor if use_cuda else torch.LongTensor
 ByteTensor = torch.cuda.ByteTensor if use_cuda else torch.ByteTensor
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # setup the environment
     env = MultiObjectiveEnv(args.env_name)
-    torch.cuda.set_device(1)
+    # torch.cuda.set_device(1)
     # get state / action / reward sizes
     state_size = len(env.state_spec)
     action_size = env.action_spec[2][1] - env.action_spec[2][0]
