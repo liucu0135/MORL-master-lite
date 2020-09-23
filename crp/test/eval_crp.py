@@ -160,7 +160,7 @@ if __name__ == '__main__':
     q_y = []
     act_x = []
     act_y = []
-    ws=np.arange(1,9)/10
+    ws=np.arange(1,10)/10
     real_sol = read_result()
     opt_x=real_sol[:,0].tolist()
     opt_y=real_sol[:,1].tolist()
