@@ -160,11 +160,11 @@ if __name__ == '__main__':
     q_y = []
     act_x = []
     act_y = []
-    ws=np.arange(10,100)//10/10
+    ws=np.arange(1,9)/10
     real_sol = read_result()
     opt_x=real_sol[:,0].tolist()
     opt_y=real_sol[:,1].tolist()
-    for i in range(90):  # $used to be 2000
+    for i in range(9):  # $used to be 2000
         print('doing test {}'.format(i))
         w = [0,1]
         w = [1-ws[i],ws[i]]
