@@ -90,7 +90,7 @@ def train(env, agent, args):
             action = agent.act(state, mask=mask)
             t_policy=time.time()-t_now
             t_now = time.time()
-            next_state, reward, terminal = env.step(action, step=min(1,num_eps/100))
+            next_state, reward, terminal = env.step(action, step=min(0.5,num_eps/100))
             t_step=time.time()-t_now
             if args.env_name == "crp":
                 next_mask=env.env.get_action_out_mask()
