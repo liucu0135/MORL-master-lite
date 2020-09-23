@@ -16,7 +16,7 @@ parser.add_argument('--model', default='conv', metavar='MODELS',
 parser.add_argument('--gamma', type=float, default=1, metavar='GAMMA',
                     help='gamma for infinite horizonal MDPs')
 # TRAINING
-parser.add_argument('--mem-size', type=int, default=6000, metavar='M',
+parser.add_argument('--mem-size', type=int, default=10000, metavar='M',
                     help='max size of the replay memory')
 parser.add_argument('--batch-size', type=int, default=128, metavar='B',
                     help='batch size')
@@ -28,11 +28,11 @@ parser.add_argument('--epsilon-decay', default=True, action='store_true',
                     help='linear epsilon decay to zero')
 parser.add_argument('--weight-num', type=int, default=64, metavar='WN',
                     help='number of sampled weights per iteration')
-parser.add_argument('--episode-num', type=int, default=40, metavar='EN',
+parser.add_argument('--episode-num', type=int, default=300, metavar='EN',
                     help='number of episodes for training')
 parser.add_argument('--optimizer', default='Adam', metavar='OPT',
                     help='optimizer: Adam | RMSprop')
-parser.add_argument('--update-freq', type=int, default=4000, metavar='OPT',
+parser.add_argument('--update-freq', type=int, default=2000, metavar='OPT',
                     help='optimizer: Adam | RMSprop')
 parser.add_argument('--beta', type=float, default=0.01, metavar='BETA',
                     help='(initial) beta for evelope algorithm, default = 0.01')
@@ -167,7 +167,6 @@ def train(env, agent, args):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    args.episode_num = 300
     # setup the environment
     env = MultiObjectiveEnv(args.env_name)
     torch.cuda.set_device(0)

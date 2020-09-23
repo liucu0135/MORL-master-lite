@@ -36,43 +36,44 @@ class EnvelopeConvCQN(torch.nn.Module):
         conv0 = [
             nn.Conv2d(self.m, 8, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(8, 32, 3, 1, 1),
+            nn.Conv2d(8, 8, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(32, 32, 3, 1, 1),
+            nn.Conv2d(8, 8, 3, 1, 1),
             nn.ReLU(),
         ]
 
         conv1 = [
             nn.Conv2d(4 + self.include_last * 2, 32, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(32, 32, 3, 1, 1),
+            nn.Conv2d(32, 64, 3, 1, 1),
             nn.ReLU(),
-            nn.MaxPool2d(3, 2, 1),
-            nn.Conv2d(32, 32, 3, 1, 1),
+            nn.Conv2d(64, 32, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(32, 32, 3, 1, 1),
+            nn.Conv2d(32, 64, 3, 1, 1),
+            nn.ReLU(),
+            nn.Conv2d(64, 32, 3, 1, 1),
             nn.ReLU(),
         ]
 
         fc0 = [
-            nn.Linear(32 * self.fcnum, 256),
+            nn.Linear(8 * self.fcnum, 128),
             nn.ReLU(),
         ]
         fc1 = [
-            nn.Linear(32 * self.c * self.m//4, 256),
+            nn.Linear(32 * self.c * self.m, 128),
             nn.ReLU(),
         ]
         fc_fuse = [
-            nn.Linear(512+2, 512),
+            nn.Linear(256+2, 256),
             nn.ReLU(),
-            nn.Linear(512, 512),
+            nn.Linear(256, 256),
             nn.ReLU(),
         ]
-        self.fca1 = nn.Linear(128, self.color_num)
-        self.fca2 = nn.Linear(128, self.color_num)
+        self.fca1 = nn.Linear(64, self.color_num)
+        self.fca2 = nn.Linear(64, self.color_num)
         # self.fca=nn.Linear(128+self.c, c)
-        self.fcv1 = nn.Linear(128 + 1, 1)
-        self.fcv2 = nn.Linear(128 + 1, 1)
+        self.fcv1 = nn.Linear(64 + 1, 1)
+        self.fcv2 = nn.Linear(64 + 1, 1)
         self.conv0 = nn.Sequential(*conv0)
         self.conv1 = nn.Sequential(*conv1)
         self.fc1 = nn.Sequential(*fc1)
@@ -138,16 +139,16 @@ class EnvelopeConvCQN(torch.nn.Module):
         x1 = self.conv1(x)
         x1 = self.fc1(x1.view(-1, 32 * self.c * self.m//4))
         x2 = self.conv0(state)
-        x2 = self.fc0(x2.view(-1, 32 * self.fcnum))
+        x2 = self.fc0(x2.view(-1, 8 * self.fcnum))
         x = self.fc_fuse(torch.cat((x1, x2, preference), dim=1))
-        v1 = self.fcv1(torch.cat((x[:, :128], step), dim=1))
-        a1 = self.fca1(x[:, 128:256])
+        v1 = self.fcv1(torch.cat((x[:, :64], step), dim=1))
+        a1 = self.fca1(x[:, 64:128])
         # a=self.fca(torch.cat((x[:,128:], dist_alert[:,0,0,:]), dim=1))
         m1 = torch.mean(a1, dim=1).unsqueeze(1).repeat(1, a1.shape[1])
         a1 = a1 - m1
         q1 = a1 + v1
-        v2 = self.fcv2(torch.cat((x[:, 256:128+256], step), dim=1))
-        a2 = self.fca2(x[:, 128+256:])
+        v2 = self.fcv2(torch.cat((x[:, 128:64+128], step), dim=1))
+        a2 = self.fca2(x[:, 64+128:])
         # a=self.fca(torch.cat((x[:,128:], dist_alert[:,0,0,:]), dim=1))
         m2 = torch.mean(a2, dim=1).unsqueeze(1).repeat(1, a2.shape[1])
         a2 = a2- m2
