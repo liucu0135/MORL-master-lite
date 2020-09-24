@@ -200,7 +200,7 @@ if __name__ == '__main__':
             next_state, reward, terminal = env.step(action)
             reward[0]=1-reward[0]
             # reward[1]=env.env.get_distortion()
-            reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/5
+            reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
             if cnt > 300:
                 terminal = True
             ttrw = ttrw + reward #* np.power(args.gamma, cnt)
