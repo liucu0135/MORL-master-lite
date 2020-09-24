@@ -168,10 +168,7 @@ if __name__ == '__main__':
         print('doing test {}'.format(i))
         # w = [0,1]
         # w = [1-ws[i],ws[i]]
-        if i<30:
-            w=[0.2,0.8]
-        else:
-            w=[0.8,0.2]
+        w=[0.8,0.2]
 
         # w = np.random.randn(2)
         w = np.abs(w) / np.linalg.norm(w, ord=1)
