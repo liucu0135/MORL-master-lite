@@ -43,13 +43,13 @@ class EnvelopeConvCQN(torch.nn.Module):
         ]
 
         conv1 = [
-            nn.Conv2d(4 + self.include_last * 2, 32, 3, 1, 1),
+            nn.Conv2d(4 + self.include_last * 2, 64, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(32, 64, 3, 1, 1),
+            nn.Conv2d(64, 64, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(64, 32, 3, 1, 1),
+            nn.Conv2d(64, 64, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(32, 64, 3, 1, 1),
+            nn.Conv2d(64, 64, 3, 1, 1),
             nn.ReLU(),
             nn.Conv2d(64, 32, 3, 1, 1),
             nn.ReLU(),
@@ -64,9 +64,9 @@ class EnvelopeConvCQN(torch.nn.Module):
             nn.ReLU(),
         ]
         fc_fuse = [
-            nn.Linear(256+2, 256),
+            nn.Linear(256+self.m+self.m, 256),
             nn.ReLU(),
-            nn.Linear(256, 256),
+            nn.Linear(256, 256-2),
             nn.ReLU(),
         ]
         self.fca1 = nn.Linear(64, self.color_num)
@@ -134,13 +134,14 @@ class EnvelopeConvCQN(torch.nn.Module):
         hist2 = torch.min(tab, hist2)
         hist3 = torch.min(tab, hist3)
         x = torch.cat((tab, hist, hist2, hist3, last, dist_alert), dim=1)
-
+        x3= torch.cat((torch.sum(hist, dim=2).squeeze(1),dist_alert[:,0,0,:]), dim=1)
 
         x1 = self.conv1(x)
         x1 = self.fc1(x1.view(-1, 32 * self.c * self.m))
         x2 = self.conv0(state)
         x2 = self.fc0(x2.view(-1, 8 * self.fcnum))
-        x = self.fc_fuse(torch.cat((x1, x2, preference), dim=1))
+        x = self.fc_fuse(torch.cat((x1, x2, x3), dim=1))
+        x = torch.cat((x, preference), dim=1)
         v1 = self.fcv1(torch.cat((x[:, :64], step), dim=1))
         a1 = self.fca1(x[:, 64:128])
         # a=self.fca(torch.cat((x[:,128:], dist_alert[:,0,0,:]), dim=1))
