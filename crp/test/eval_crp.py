@@ -164,10 +164,15 @@ if __name__ == '__main__':
     real_sol = read_result()
     opt_x=real_sol[:,0].tolist()
     opt_y=real_sol[:,1].tolist()
-    for i in range(9):  # $used to be 2000
+    for i in range(60):  # $used to be 2000
         print('doing test {}'.format(i))
-        w = [0,1]
-        w = [1-ws[i],ws[i]]
+        # w = [0,1]
+        # w = [1-ws[i],ws[i]]
+        if i<30:
+            w=0.2
+        else:
+            w=0.8
+
         # w = np.random.randn(2)
         w = np.abs(w) / np.linalg.norm(w, ord=1)
         # w = np.random.dirichlet(np.ones(2))
