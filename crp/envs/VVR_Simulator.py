@@ -52,7 +52,7 @@ class VVR_Simulator():
         in_tensor = torch.zeros(self.num_model)
         mct=torch.zeros(num_tensor,num_tensor)
         last_tensor = torch.zeros(num_tensor)
-        dist_alert_tensor = torch.zeros(num_tensor).float()-1
+        dist_alert_tensor = torch.zeros(num_tensor).float()
 
         m_hist= torch.zeros(num_tensor)
         m_hist2= torch.zeros(num_tensor)
@@ -68,7 +68,7 @@ class VVR_Simulator():
         for c in range(self.num_color):
             t=self.find_nearest_order(self.search_model(c), c)
             if t>0:
-                dist_alert_tensor[c]=t
+                dist_alert_tensor[c]=max(0,t-len(self.start_sequencec)-self.capacity)
 
 
 
