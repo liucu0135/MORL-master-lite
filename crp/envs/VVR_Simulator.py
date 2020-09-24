@@ -130,8 +130,8 @@ class VVR_Simulator():
         else:
             reward.append(1)
         # reward.append(-self.get_distortion())
-        step=0.5
-        reward.append((1-self.get_distortion()/100)*(1-step)+step*(1-self.get_distortion(absolute=True, tollerance=0)/10))
+        # step=0.5
+        reward.append((2-self.get_distortion()/100))#*(1-step)+step*(1-self.get_distortion(absolute=True, tollerance=0)/10))
         # reward.append(-self.get_distortion(absolute=True, tollerance=0)/10)
         self.current_state=self.observe()
         if len(self.start_sequencec)<self.capacity:
