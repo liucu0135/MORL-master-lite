@@ -111,7 +111,7 @@ def train(env, agent, args):
             act1+=reward[0]
             act2+=reward[1]
             tot_reward_nc = tot_reward_nc + 1-reward[0]
-            tot_reward_dist= tot_reward_dist + env.env.get_distortion(absolute=True, tollerance=15)/5
+            tot_reward_dist= tot_reward_dist + env.env.get_distortion(absolute=True, tollerance=0)/5
             cnt = cnt + 1
 
         # _, q = agent.predict(probe, initial_state=initial_state)
