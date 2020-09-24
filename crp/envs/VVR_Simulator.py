@@ -52,8 +52,7 @@ class VVR_Simulator():
         in_tensor = torch.zeros(self.num_model)
         mct=torch.zeros(num_tensor,num_tensor)
         last_tensor = torch.zeros(num_tensor)
-        dist_alert_tensor = torch.zeros(num_tensor).float()
-        ctemp = np.zeros(self.num_color)
+        dist_alert_tensor = torch.zeros(num_tensor).float()-1
 
         m_hist= torch.zeros(num_tensor)
         m_hist2= torch.zeros(num_tensor)
@@ -64,15 +63,23 @@ class VVR_Simulator():
         steps = torch.ones(num_tensor).float()*len(self.bank.out_queue)/100
         if self.last_color>-1:
             last_tensor[self.last_color]=1
+
+
         for c in range(self.num_color):
-            ctemp[c]=self.search_model(c)
+            t=self.find_nearest_order(self.search_model(c), c)
+            if t>0:
+                dist_alert_tensor[c]=t
 
 
-        for i in range(len(self.start_sequencec)+self.capacity, self.orders_num):
-            if i in self.plan_list:
-                if ctemp[self.plan_list[i][0]]==self.plan_list[i][1]:
-                    dist_alert_tensor[self.plan_list[i][0]]=i-len(self.start_sequencec)+self.capacity
-                    continue
+
+        #
+        # for i in range(len(self.start_sequencec)+self.capacity, self.orders_num):
+        #     if i in range(sorted(self.plan_list.keys(), reverse=True)):
+        #         latency=max(0,i-len(self.start_sequencec)-self.capacity)
+        #         if ctemp[self.plan_list[i][0]]==self.plan_list[i][1]:
+        #             if dist_alert_tensor[self.plan_list[i][0]]<i-len(self.start_sequencec)+self.capacity:
+        #                 dist_alert_tensor[self.plan_list[i][0]]=
+        #             continue
 
         if len(self.bank.in_queue):
             in_m=self.bank.in_queue[0]
@@ -124,8 +131,8 @@ class VVR_Simulator():
             reward.append(1)
         # reward.append(-self.get_distortion())
         step=0.2
-        reward.append((1-self.get_distortion()/100))#*(1-step)+step*(1-self.get_distortion(absolute=True, tollerance=15)/5))
-        # reward.append(2-self.get_distortion(absolute=True, tollerance=15)/5)
+        #reward.append((1-self.get_distortion()/100))#*(1-step)+step*(1-self.get_distortion(absolute=True, tollerance=15)/5))
+        reward.append(5-self.get_distortion(absolute=True, tollerance=0)/5)
         self.current_state=self.observe()
         if len(self.start_sequencec)<self.capacity:
             self.terminal=True
@@ -246,7 +253,8 @@ class VVR_Simulator():
             if self.orders_num-k in self.plan_list:
                 if self.plan_list[self.orders_num-k][0]==c and self.plan_list[self.orders_num-k][1]==m:
                     return self.orders_num-k
-        print('nearest order not found')
+        # print('nearest order not found')
+        return -1
 
     def search_model(self, color):
         job_list, color = self.find_job_list(color)

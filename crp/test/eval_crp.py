@@ -164,7 +164,7 @@ if __name__ == '__main__':
     real_sol = read_result()
     opt_x=real_sol[:,0].tolist()
     opt_y=real_sol[:,1].tolist()
-    for i in range(60):  # $used to be 2000
+    for i in range(1):  # $used to be 2000
         print('doing test {}'.format(i))
         # w = [0,1]
         # w = [1-ws[i],ws[i]]
@@ -197,7 +197,7 @@ if __name__ == '__main__':
             next_state, reward, terminal = env.step(action)
             reward[0]=1-reward[0]
             # reward[1]=env.env.get_distortion()
-            reward[1]=env.env.get_distortion(absolute=True, tollerance=15)/5
+            reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/5
             if cnt > 300:
                 terminal = True
             ttrw = ttrw + reward #* np.power(args.gamma, cnt)
