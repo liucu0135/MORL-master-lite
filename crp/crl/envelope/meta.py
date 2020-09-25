@@ -80,7 +80,9 @@ class MetaAgent(object):
         # random pick a preference if it is not specified
         if preference is None:
             if self.w_kept is None:
-                self.w_kept = torch.randn(self.model_.reward_size)
+                self.w_kept=torch.from_numpy(min(1,np.abs(np.random.normal(0,1))))
+                self.w_kept = [1-self.w_kept, self.w_kept]
+                # self.w_kept = torch.randn(self.model_.reward_size)
                 # self.w_kept /=torch.from_numpy(np.sqrt(self.preference_mean)+0.0001)
                 # self.w_kept = torch.from_numpy(
                 # # 1 / (0.0001+np.abs(np.random.multivariate_normal(np.zeros(self.model.reward_size), self.preference_cov))))
@@ -224,7 +226,10 @@ class MetaAgent(object):
             # update mean
             self.preference_mean=np.mean(np.abs(reward_data), axis=0)
 
-            w_batch = np.random.randn(self.weight_num, reward_size)
+            w_batch = np.min(1,np.abs(np.random.normal(0,0.1,(self.weight_num, 1))))
+            w_batch2 = 1-w_batch
+            w_batch=np.column_stack(w_batch,w_batch2)
+
             # w_batch=w_batch/np.repeat(np.expand_dims(np.sqrt(self.preference_mean)+0.0001,axis=0),self.weight_num,axis=0)
             # w_batch = (np.abs(np.random.multivariate_normal(self.preference_mean, self.preference_cov, size=self.weight_num)))
             # w_batch=w_batch[:,::-1]
