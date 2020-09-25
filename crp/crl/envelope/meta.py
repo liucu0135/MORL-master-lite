@@ -80,8 +80,8 @@ class MetaAgent(object):
         # random pick a preference if it is not specified
         if preference is None:
             if self.w_kept is None:
-                self.w_kept=torch.from_numpy(min(1,np.abs(np.random.normal(0,1))))
-                self.w_kept = [1-self.w_kept, self.w_kept]
+                self.w_kept=min(1,np.abs(np.random.normal(0,1)))
+                self.w_kept = torch.FloatTensor[1-self.w_kept, self.w_kept]
                 # self.w_kept = torch.randn(self.model_.reward_size)
                 # self.w_kept /=torch.from_numpy(np.sqrt(self.preference_mean)+0.0001)
                 # self.w_kept = torch.from_numpy(
