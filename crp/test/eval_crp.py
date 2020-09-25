@@ -211,18 +211,17 @@ if __name__ == '__main__':
         # q_y.append(qc[1])
         act_x.append(ttrw[0])
         act_y.append(ttrw[1])
-    if i<20:
-        trace_opt = dict(x=act_x,
-                     y=act_y,
+    trace_opt = dict(x=act_x[:20],
+                     y=act_y[:20],
                      mode="markers",
                      type='custom',
                      marker=dict(
                          symbol="circle",
                          size=3),
                      name='real')
-    else:
-        act_opt = dict(x=act_x,
-                   y=act_y,
+
+    act_opt = dict(x=act_x[20:],
+                   y=act_y[20:],
                    mode="markers",
                    type='custom',
                    marker=dict(
