@@ -1,10 +1,12 @@
 from __future__ import absolute_import, division, print_function
+
 import argparse
-import numpy as np
-import torch
-from utils.monitor import Monitor
-from envs.mo_env import MultiObjectiveEnv
 import time
+
+import torch
+from envs.mo_env import MultiObjectiveEnv
+from utils.monitor import Monitor
+
 parser = argparse.ArgumentParser(description='MORL')
 # CONFIG
 parser.add_argument('--env-name', default='crp', metavar='ENVNAME',
@@ -22,7 +24,7 @@ parser.add_argument('--batch-size', type=int, default=96, metavar='B',
                     help='batch size')
 parser.add_argument('--lr', type=float, default=4e-5, metavar='LR',
                     help='learning rate')
-parser.add_argument('--epsilon', type=float, default=0.9, metavar='EPS',
+parser.add_argument('--epsilon', type=float, default=0.99, metavar='EPS',
                     help='epsilon greedy exploration')
 parser.add_argument('--epsilon-decay', default=True, action='store_true',
                     help='linear epsilon decay to zero')
