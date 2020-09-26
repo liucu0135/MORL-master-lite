@@ -164,14 +164,18 @@ if __name__ == '__main__':
     real_sol = read_result()
     opt_x=real_sol[:,0].tolist()
     opt_y=real_sol[:,1].tolist()
-    for i in range(40):  # $used to be 2000
+    for i in range(100):  # $used to be 2000
         print('doing test {}'.format(i))
         # w = [0,1]
         # w = [1-ws[i],ws[i]]
         if i<20:
-            w=[0,1]
+            w=[0.8,0.2]
+        elif i<40:
+            w=[0.6,0.4]
+        elif i<80:
+            w = [0.4, 0.6]
         else:
-            w=[1, 0]
+            w=[0.2, 0.8]
 
         # w = np.random.randn(2)
         w = np.abs(w) / np.linalg.norm(w, ord=1)
@@ -211,8 +215,8 @@ if __name__ == '__main__':
         # q_y.append(qc[1])
         act_x.append(ttrw[0])
         act_y.append(ttrw[1])
-    trace_opt = dict(x=act_x[:20],
-                     y=act_y[:20],
+    trace_opt = dict(x=act_x[:20]+act_x[40:60],
+                     y=act_y[:20]+act_y[40:60],
                      mode="markers",
                      type='custom',
                      marker=dict(
@@ -220,8 +224,8 @@ if __name__ == '__main__':
                          size=3),
                      name='real')
 
-    act_opt = dict(x=act_x[20:],
-                   y=act_y[20:],
+    act_opt = dict(x=act_x[20:40]+act_x[60:80],
+                   y=act_y[20:10]+act_y[60:80],
                    mode="markers",
                    type='custom',
                    marker=dict(

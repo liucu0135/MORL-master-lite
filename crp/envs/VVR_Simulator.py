@@ -68,7 +68,10 @@ class VVR_Simulator():
         for c in range(self.num_color):
             t=self.find_nearest_order(self.search_model(c), c)
             if t>0:
-                dist_alert_tensor[c]=max(0,t-len(self.start_sequencec)-self.capacity)
+                dist_alert_tensor[c]=t-len(self.start_sequencec)-self.capacity
+                d=dist_alert_tensor
+                dist_alert_tensor=torch.zeros_like(d)
+                dist_alert_tensor[np.argmax(d)]=1
 
 
 

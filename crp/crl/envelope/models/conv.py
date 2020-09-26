@@ -36,9 +36,9 @@ class EnvelopeConvCQN(torch.nn.Module):
         conv0 = [
             nn.Conv2d(self.m, 64, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(64, 128, 3, 1, 1),
+            nn.Conv2d(64, 64, 3, 1, 1),
             nn.ReLU(),
-            nn.Conv2d(128, 64, 3, 1, 1),
+            nn.Conv2d(64, 64, 3, 1, 1),
             nn.ReLU(),
         ]
 
