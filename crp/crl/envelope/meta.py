@@ -297,12 +297,12 @@ class MetaAgent(object):
         self.w_kept = None
         if self.epsilon_decay:
             if self.epsilon>0.001:
-                self.epsilon *=0.9
+                self.epsilon *=0.98
                 # print('eps:{}'.format(self.epsilon))
             # self.epsilon -= self.epsilon_delta
         if self.homotopy:
             if self.beta<0.95:
-                self.beta += 0.01# self.beta_delta
+                self.beta += 0.005# self.beta_delta
             # self.beta += self.beta_delta
             # self.beta_delta = (self.beta-self.beta_init)*self.beta_expbase+self.beta_init-self.beta
 

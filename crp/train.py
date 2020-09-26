@@ -18,11 +18,11 @@ parser.add_argument('--gamma', type=float, default=1, metavar='GAMMA',
 # TRAINING
 parser.add_argument('--mem-size', type=int, default=100000, metavar='M',
                     help='max size of the replay memory')
-parser.add_argument('--batch-size', type=int, default=128, metavar='B',
+parser.add_argument('--batch-size', type=int, default=100, metavar='B',
                     help='batch size')
-parser.add_argument('--lr', type=float, default=1e-5, metavar='LR',
+parser.add_argument('--lr', type=float, default=5e-5, metavar='LR',
                     help='learning rate')
-parser.add_argument('--epsilon', type=float, default=0.9, metavar='EPS',
+parser.add_argument('--epsilon', type=float, default=0.99, metavar='EPS',
                     help='epsilon greedy exploration')
 parser.add_argument('--epsilon-decay', default=True, action='store_true',
                     help='linear epsilon decay to zero')
