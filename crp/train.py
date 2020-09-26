@@ -22,7 +22,7 @@ parser.add_argument('--mem-size', type=int, default=100000, metavar='M',
                     help='max size of the replay memory')
 parser.add_argument('--batch-size', type=int, default=96, metavar='B',
                     help='batch size')
-parser.add_argument('--lr', type=float, default=4e-5, metavar='LR',
+parser.add_argument('--lr', type=float, default=2e-5, metavar='LR',
                     help='learning rate')
 parser.add_argument('--epsilon', type=float, default=0.99, metavar='EPS',
                     help='epsilon greedy exploration')
