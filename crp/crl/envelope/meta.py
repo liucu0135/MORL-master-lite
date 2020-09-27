@@ -80,7 +80,8 @@ class MetaAgent(object):
         # random pick a preference if it is not specified
         if preference is None:
             if self.w_kept is None:
-                self.w_kept=np.abs(np.random.normal(0,0.3))
+                self.w_kept=np.abs(np.random.uniform(0,1))
+                # self.w_kept=np.abs(np.random.normal(0,0.3))
 
                 if np.random.rand()<0.5:
                     self.w_kept = torch.Tensor([1-self.w_kept, self.w_kept])
@@ -230,13 +231,13 @@ class MetaAgent(object):
             # # update mean
             # self.preference_mean=np.mean(np.abs(reward_data), axis=0)
 
-            # w_batch = np.abs(np.random.normal(0,0.3,self.weight_num))
-            # w_batch2 = np.abs(1-w_batch)
-            # if np.random.rand()<0.5:
-            #     w_batch=np.column_stack((w_batch,w_batch2))
-            # else:
-            #     w_batch=np.column_stack((w_batch2,w_batch))
-            w_batch = np.abs(np.random.uniform(0,1,(1,2)))
+            w_batch = np.abs(np.random.normal(0,0.3,self.weight_num))
+            w_batch2 = np.abs(1-w_batch)
+            if np.random.rand()<0.5:
+                w_batch=np.column_stack((w_batch,w_batch2))
+            else:
+                w_batch=np.column_stack((w_batch2,w_batch))
+            # w_batch = np.abs(np.random.uniform(0,1,(1,2)))
 
             # w_batch=w_batch/np.repeat(np.expand_dims(np.sqrt(self.preference_mean)+0.0001,axis=0),self.weight_num,axis=0)
             # w_batch = (np.abs(np.random.multivariate_normal(self.preference_mean, self.preference_cov, size=self.weight_num)))
