@@ -66,7 +66,7 @@ class VVR_Simulator():
 
 
         for c in range(self.num_color):
-            t=self.find_nearest_order(self.search_model(c), c)
+            t=self.search_color_dist(c)
             dist_alert_tensor[c]=t-len(self.start_sequencec)-self.capacity
                 # d=dist_alert_tensor
                 # dist_alert_tensor=torch.zeros_like(d)
@@ -258,7 +258,16 @@ class VVR_Simulator():
         # print('nearest order not found')
         return -1
 
-    def search_model(self, color):
+    # def search_model(self, color):
+    #     job_list, color = self.find_job_list(color)
+    #     lane_dists = np.zeros(self.num_lanes)
+    #     for l in range(self.num_lanes):
+    #         model = self.bank.front_view()[l]
+    #         if (job_list[model]) and (model > -1):
+    #             lane_dists[l] = self.find_nearest_order(model, color)
+    #     l = np.argmax(lane_dists)
+    #     return l
+    def search_color_dist(self, color):
         job_list, color = self.find_job_list(color)
         lane_dists = np.zeros(self.num_lanes)
         for l in range(self.num_lanes):
