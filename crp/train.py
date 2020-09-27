@@ -22,7 +22,7 @@ parser.add_argument('--mem-size', type=int, default=100000, metavar='M',
                     help='max size of the replay memory')
 parser.add_argument('--batch-size', type=int, default=96, metavar='B',
                     help='batch size')
-parser.add_argument('--lr', type=float, default=2e-5, metavar='LR',
+parser.add_argument('--lr', type=float, default=5e-5, metavar='LR',
                     help='learning rate')
 parser.add_argument('--epsilon', type=float, default=0.98, metavar='EPS',
                     help='epsilon greedy exploration')
@@ -45,7 +45,7 @@ parser.add_argument('--serialize', default=False, action='store_true',
                     help='serialize a model')
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='path for saving trained models')
-parser.add_argument('--name', default='uni_ex_norm_learn_sample', metavar='name',
+parser.add_argument('--name', default='uni_ex_uni_learn_sample_homoreward', metavar='name',
                     help='specify a name for saving the model')
 parser.add_argument('--log', default='crl/envelope/logs/', metavar='LOG',
                     help='path for recording training informtion')
@@ -92,7 +92,7 @@ def train(env, agent, args):
             action = agent.act(state, mask=mask)
             t_policy=time.time()-t_now
             t_now = time.time()
-            next_state, reward, terminal = env.step(action, step=0.5)
+            next_state, reward, terminal = env.step(action, step=min(1,num_eps/100))
             t_step=time.time()-t_now
             if args.env_name == "crp":
                 next_mask=env.env.get_action_out_mask()

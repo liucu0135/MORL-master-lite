@@ -231,7 +231,8 @@ class MetaAgent(object):
             # # update mean
             # self.preference_mean=np.mean(np.abs(reward_data), axis=0)
 
-            w_batch = np.abs(np.random.normal(0,0.3,self.weight_num))
+            w_batch = np.abs(np.random.uniform(0,1,self.weight_num))
+            # w_batch = np.abs(np.random.normal(0,0.3,self.weight_num))
             w_batch2 = np.abs(1-w_batch)
             if np.random.rand()<0.5:
                 w_batch=np.column_stack((w_batch,w_batch2))
