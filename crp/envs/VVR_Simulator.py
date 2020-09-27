@@ -267,7 +267,7 @@ class VVR_Simulator():
             if (job_list[model]) and (model > -1):
                 lane_dists[l] = self.find_nearest_order(model, color)
         l = np.argmax(lane_dists)
-        return l
+        return self.bank.front_view()[l]
 
     def release(self, lane, color):
         model = self.bank.front_view()
