@@ -168,15 +168,17 @@ if __name__ == '__main__':
         print('doing test {}'.format(i))
         # w = [0,1]
         # w = [1-ws[i],ws[i]]
+
         if i<20:
             w=[0.8,0.2]
         elif i<40:
             w=[0.6,0.4]
+        elif i<60:
+            w = [0.5, 0.5]
         elif i<80:
             w = [0.4, 0.6]
         else:
             w=[0.2, 0.8]
-
         # w = np.random.randn(2)
         w = np.abs(w) / np.linalg.norm(w, ord=1)
         # w = np.random.dirichlet(np.ones(2))
@@ -215,8 +217,8 @@ if __name__ == '__main__':
         # q_y.append(qc[1])
         act_x.append(ttrw[0])
         act_y.append(ttrw[1])
-    trace_opt = dict(x=act_x[:20]+act_x[40:60],
-                     y=act_y[:20]+act_y[40:60],
+    trace_opt = dict(x=act_x[:20]+act_x[40:60]+act_x[80:],
+                     y=act_y[:20]+act_y[40:60]+act_y[80:],
                      mode="markers",
                      type='custom',
                      marker=dict(
