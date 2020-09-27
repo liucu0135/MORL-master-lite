@@ -225,7 +225,7 @@ if __name__ == '__main__':
                      name='real')
 
     act_opt = dict(x=act_x[20:40]+act_x[60:80],
-                   y=act_y[20:10]+act_y[60:80],
+                   y=act_y[20:40]+act_y[60:80],
                    mode="markers",
                    type='custom',
                    marker=dict(
