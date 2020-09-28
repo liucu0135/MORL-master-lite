@@ -40,6 +40,8 @@ parser.add_argument('--beta', type=float, default=0.02, metavar='BETA',
                     help='(initial) beta for evelope algorithm, default = 0.01')
 parser.add_argument('--homotopy', default=True, action='store_true',
                     help='use homotopy optimization method')
+parser.add_argument('--cc_file', default='envs/cost.csv', metavar='SAVE',
+                    help='path for saving trained models')
 # LOG & SAVING
 parser.add_argument('--serialize', default=False, action='store_true',
                     help='serialize a model')

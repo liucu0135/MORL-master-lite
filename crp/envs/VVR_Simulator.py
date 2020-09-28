@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import pandas as pd
 
 from .VVR_Bank import VVR_Bank as Bank
 
@@ -10,7 +11,7 @@ from .VVR_Bank import VVR_Bank as Bank
 #   2. create self.terminal: count remaining orders inside sim object
 #   3. create self.reward:   calculate reward inside sim object
 class VVR_Simulator():
-    def __init__(self, num_color=10, num_model=10, capacity=7*8*6//10, num_lanes=7, on=300, lane_length=8):
+    def __init__(self, num_color=10, num_model=10, capacity=7*8*6//10, num_lanes=7, on=300, lane_length=8, cc_file='envs/cost.csv'):
         self.num_color = num_color
         self.num_model = num_model
         self.num_lanes = num_lanes
@@ -25,6 +26,8 @@ class VVR_Simulator():
         self.reward_spec = [[0, 100], [0, 1000]]
         self.state_spec = [['discrete', 1, [0, self.num_lanes-10]]]*self.state_len
         self.action_spec = ['discrete', 1, [0, self.num_color]]
+        if cc_file is not None:
+            self.ccm=self.read_cc_matrix(cc_file)
         self.reset()
 
     def reset(self):
@@ -47,6 +50,10 @@ class VVR_Simulator():
         self.terminal=False
         self.current_state = self.get_out_tensor()
 
+    def read_cc_matrix(self,cc_file):
+        ccm=pd.read_csv(cc_file)
+        ccm=ccm.to_numpy(dtype=np.float,copy=True)[:,1:]/7
+        return ccm
 
     def get_out_tensor(self, gpu=False, cc=False):
         num_tensor=max(self.num_color,self.num_model)
@@ -129,9 +136,9 @@ class VVR_Simulator():
         self.step_forward_out_semi_rl()
         reward=[]
         if not last==self.last_color:
-            reward.append(0)
+            reward.append(1-self.ccm[last,self.last_color])
         else:
-            reward.append(1)
+            reward.append(1-0)
         # reward.append(-self.get_distortion())
         # step=0.5
 
