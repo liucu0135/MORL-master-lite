@@ -11,7 +11,7 @@ from .VVR_Bank import VVR_Bank as Bank
 #   2. create self.terminal: count remaining orders inside sim object
 #   3. create self.reward:   calculate reward inside sim object
 class VVR_Simulator():
-    def __init__(self, num_color=10, num_model=10, capacity=7*8*6//10, num_lanes=7, on=300, lane_length=8, cc_file='envs/cost.csv'):
+    def __init__(self, num_color=10, num_model=10, capacity=7*8*6//10, num_lanes=7, on=300, lane_length=8, cc_file='envs/cost.csv',color_dist_file='envs/total_orders.csv'):
         self.num_color = num_color
         self.num_model = num_model
         self.num_lanes = num_lanes
@@ -28,11 +28,23 @@ class VVR_Simulator():
         self.action_spec = ['discrete', 1, [0, self.num_color]]
         if cc_file is not None:
             self.ccm=self.read_cc_matrix(cc_file)
+        if color_dist_file is not None:
+            self.color_dist=self.read_color_dist(color_dist_file)
+            self.model_dist = self.color_dist[:self.num_model] / sum(self.color_dist[:self.num_model])
         self.reset()
 
     def reset(self):
-        self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
-        self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
+        # self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
+        # self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
+        if self.color_dist_file is not None:
+            self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num, p=self.color_dist).tolist()
+        else:
+            self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
+        if self.color_dist_file is not None:
+            self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num, p=self.model_dist).tolist()
+        else:
+            self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
+
         self.bank = Bank(fix_init=True, num_of_colors=self.num_model, sequence=self.start_sequencem,
                          num_of_lanes=self.num_lanes,
                          lane_length=self.lane_length)
@@ -54,6 +66,12 @@ class VVR_Simulator():
         ccm=pd.read_csv(cc_file)
         ccm=ccm.to_numpy(dtype=np.float,copy=True)[:,1:]/7
         return ccm
+
+    def read_color_dist(self, color_file):
+        dist = pd.read_csv(color_file)
+        dist = dist.to_numpy(dtype=np.float, copy=True).squeeze()
+        dist=dist/sum(dist)
+        return dist
 
     def get_out_tensor(self, gpu=False, cc=False):
         num_tensor=max(self.num_color,self.num_model)
