@@ -160,7 +160,7 @@ class VVR_Simulator():
         # reward.append(-self.get_distortion())
         # step=0.5
 
-        reward.append(1.5-self.get_distortion()/100)#*(1-step)+step*(1-self.get_distortion(absolute=True, tollerance=0)/10))
+        reward.append(1-self.get_distortion()/100)#*(1-step)+step*(1-self.get_distortion(absolute=True, tollerance=0)/10))
         # reward.append(-self.get_distortion(absolute=True, tollerance=0)/10)
         self.current_state=self.observe()
         if len(self.start_sequencec)<self.capacity:
@@ -314,7 +314,7 @@ class VVR_Simulator():
                 return False  # return false if the release fails
             self.mc_tab[model, color] -= 1
             if not (color == self.last_color):
-                self.cc += 1
+                self.cc += self.ccm[color, self.last_color]
                 self.last_color = color
             k=self.find_nearest_order(model,color)
             self.plan_list.pop(k)
