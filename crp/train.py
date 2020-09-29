@@ -28,7 +28,7 @@ parser.add_argument('--epsilon', type=float, default=0.98, metavar='EPS',
                     help='epsilon greedy exploration')
 parser.add_argument('--epsilon-decay', default=True, action='store_true',
                     help='linear epsilon decay to zero')
-parser.add_argument('--weight-num', type=int, default=16, metavar='WN',
+parser.add_argument('--weight-num', type=int, default=12, metavar='WN',
                     help='number of sampled weights per iteration')
 parser.add_argument('--episode-num', type=int, default=1000, metavar='EN',
                     help='number of episodes for training')
@@ -114,7 +114,7 @@ def train(env, agent, args):
             tot_reward = tot_reward + (probe.cpu().numpy().dot(reward))
             act1+=reward[0]
             act2+=reward[1]
-            tot_reward_nc = tot_reward_nc + 1-reward[0]
+            tot_reward_nc = tot_reward_nc + reward[0]
             tot_reward_dist= tot_reward_dist + env.env.get_distortion(absolute=True, tollerance=0)/10
             cnt = cnt + 1
 
