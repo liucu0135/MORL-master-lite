@@ -11,7 +11,7 @@ from .VVR_Bank import VVR_Bank as Bank
 #   2. create self.terminal: count remaining orders inside sim object
 #   3. create self.reward:   calculate reward inside sim object
 class VVR_Simulator():
-    def __init__(self, num_color=10, num_model=10, capacity=7*8*6//10, num_lanes=7, on=300, lane_length=8, cc_file='envs/cost.csv',color_dist_file='envs/total_orders.csv'):
+    def __init__(self, num_color=14, num_model=10, capacity=7*8*6//10, num_lanes=7, on=300, lane_length=8, cc_file='envs/cost.csv',color_dist_file='envs/total_orders.csv'):
         self.num_color = num_color
         self.num_model = num_model
         self.num_lanes = num_lanes
@@ -20,7 +20,7 @@ class VVR_Simulator():
         self.rewards = [1, 0, -1]  # [0]for unchange, [1]for change, [2]for error
         self.capacity = capacity
         self.terminal = False
-        self.color_dist_file=None
+        self.color_dist_file=color_dist_file
         self.orders_num=on
         self.state_len=self.num_model*self.num_lanes*(self.lane_length+2)+(max(self.num_color,self.num_model)+6)*(max(self.num_color,self.num_model))
         self.reward_spec = [[0, 100], [0, 1000]]
@@ -160,7 +160,7 @@ class VVR_Simulator():
         # reward.append(-self.get_distortion())
         # step=0.5
 
-        reward.append(2-self.get_distortion()/100)#*(1-step)+step*(1-self.get_distortion(absolute=True, tollerance=0)/10))
+        reward.append(1-self.get_distortion()/150)#*(1-step)+step*(1-self.get_distortion(absolute=True, tollerance=0)/10))
         # reward.append(-self.get_distortion(absolute=True, tollerance=0)/10)
         self.current_state=self.observe()
         if len(self.start_sequencec)<self.capacity:
