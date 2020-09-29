@@ -64,7 +64,7 @@ class VVR_Simulator():
 
     def read_cc_matrix(self,cc_file):
         ccm=pd.read_csv(cc_file)
-        ccm=ccm.to_numpy(dtype=np.float,copy=True)[:,1:]/7
+        ccm=ccm.to_numpy(dtype=np.float,copy=True)[:,1:]/7.6
         return ccm
 
     def read_color_dist(self, color_file):
