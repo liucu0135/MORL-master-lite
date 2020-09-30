@@ -36,7 +36,7 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 # LOG & SAVING
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
-parser.add_argument('--name', default='uni_ex_uni_learn_sample_unshaped_ccm', metavar='name',
+parser.add_argument('--name', default='uni_ex_uni_learn_sample_semishaped_ccm', metavar='name',
                     help='specify a name for saving the model')
 # Useless but I am too laze to delete them
 parser.add_argument('--mem-size', type=int, default=10000, metavar='M',
@@ -206,8 +206,8 @@ if __name__ == '__main__':
             next_state, reward, terminal = env.step(action)
             reward[0]=-reward[0]
             # reward[1]=env.env.get_distortion()
-            reward[1]=-reward[1]
-            # reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
+            # reward[1]=-reward[1]
+            reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
             if cnt > 300:
                 terminal = True
             ttrw = ttrw + reward #* np.power(args.gamma, cnt)
