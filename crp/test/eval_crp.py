@@ -1,13 +1,14 @@
 from __future__ import absolute_import, division, print_function
-import argparse
-import visdom
-import torch
-import numpy as np
-from sklearn.manifold import TSNE
-from read_result import read_result
 
-import sys
+import argparse
 import os
+import sys
+
+import numpy as np
+import torch
+import visdom
+from read_result import read_result
+from sklearn.manifold import TSNE
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
@@ -36,7 +37,7 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 # LOG & SAVING
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
-parser.add_argument('--name', default='uni_ex_uni_learn_sample_semishaped_ccm', metavar='name',
+parser.add_argument('--name', default='uni_ex_uni_learn_sample_shaped_ccm', metavar='name',
                     help='specify a name for saving the model')
 # Useless but I am too laze to delete them
 parser.add_argument('--mem-size', type=int, default=10000, metavar='M',
