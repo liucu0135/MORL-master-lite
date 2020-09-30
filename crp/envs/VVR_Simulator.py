@@ -158,7 +158,7 @@ class VVR_Simulator():
         else:
             reward.append(0)
         # reward.append(-self.get_distortion())
-        step=0.5
+        step=1
 
         reward.append((-self.get_distortion()/50)*(1-step)+step*(-self.get_distortion(absolute=True, tollerance=0)/10))
         # reward.append(-self.get_distortion(absolute=True, tollerance=0)/10)
