@@ -154,13 +154,13 @@ class VVR_Simulator():
         self.step_forward_out_semi_rl()
         reward=[]
         if not last==self.last_color:
-            reward.append(-self.ccm[last,self.last_color])
+            reward.append(1-self.ccm[last,self.last_color])
         else:
-            reward.append(0)
+            reward.append(1)
         # reward.append(-self.get_distortion())
-        step=1
+        # step=1
 
-        reward.append((-self.get_distortion()/50)*(1-step)+step*(-self.get_distortion(absolute=True, tollerance=0)/10))
+        reward.append((2-self.get_distortion()/100))#*(1-step)+step*(-self.get_distortion(absolute=True, tollerance=0)/10))
         # reward.append(-self.get_distortion(absolute=True, tollerance=0)/10)
         self.current_state=self.observe()
         if len(self.start_sequencec)<self.capacity:
