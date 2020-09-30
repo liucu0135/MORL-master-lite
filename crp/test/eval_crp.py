@@ -208,7 +208,7 @@ if __name__ == '__main__':
             # reward[1]=env.env.get_distortion()
             # reward[1]=-reward[1]
             reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
-            if cnt > 300:
+            if cnt > 1000:
                 terminal = True
             ttrw = ttrw + reward #* np.power(args.gamma, cnt)
             cnt += 1
