@@ -153,9 +153,9 @@ class VVR_Simulator():
         self.set_target(action)
         self.step_forward_out_semi_rl()
         reward=[]
+        self.stepcc = self.ccm[last, self.last_color]
         if not last==self.last_color:
             reward.append(1-self.ccm[last,self.last_color])
-            self.stepcc=self.ccm[last,self.last_color]
         else:
             reward.append(1)
         # reward.append(-self.get_distortion())

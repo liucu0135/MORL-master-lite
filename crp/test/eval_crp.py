@@ -196,7 +196,7 @@ if __name__ == '__main__':
             mask = env.env.get_action_out_mask()
             action = agent.act(state, preference=torch.from_numpy(w).type(FloatTensor), mask=mask)
             next_state, reward, terminal = env.step(action)
-            reward[0]=env.stepcc
+            reward[0]=env.sim
             # reward[1]=env.env.get_distortion()
             # reward[1]=-reward[1]
             reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
