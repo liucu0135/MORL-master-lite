@@ -22,8 +22,10 @@ parser.add_argument('--method', default='crl-envelope', metavar='METHODS',
                     help='methods: crl-naive | crl-envelope | crl-energy')
 parser.add_argument('--model', default='conv', metavar='MODELS',
                     help='linear | cnn | cnn + lstm')
-parser.add_argument('--gamma', type=float, default=0.99, metavar='GAMMA',
+parser.add_argument('--gamma', type=float, default=1, metavar='GAMMA',
                     help='gamma for infinite horizonal MDPs')
+parser.add_argument('--bench_csv', default='./test/bench.csv',
+                    help='location for benchmark csv file')
 # PLOT
 parser.add_argument('--pltmap', default=False, action='store_true',
                     help='plot deep sea treasure map')
@@ -160,25 +162,15 @@ if __name__ == '__main__':
     q_y = []
     act_x = []
     act_y = []
-    ws=np.arange(1,10)/10
-    real_sol = read_result()
-    opt_x=real_sol[:,0].tolist()
-    opt_y=real_sol[:,1].tolist()
-    for i in range(100):  # $used to be 2000
+    ws=np.arange(0,11)/10
+    opt_x,opt_y = read_result(args.bench_csv)
+    for i in range(11):  # $used to be 2000
         print('doing test {}'.format(i))
-        # w = [0,1]
-        # w = [1-ws[i],ws[i]]
 
-        if i<20:
-            w=[0.8,0.2]
-        elif i<40:
-            w=[0.6,0.4]
-        elif i<60:
-            w = [0.5, 0.5]
-        elif i<80:
-            w = [0.4, 0.6]
-        else:
-            w=[0.2, 0.8]
+        w=i/10.0
+        w=[w, 1-w]
+
+
         # w = np.random.randn(2)
         w = np.abs(w) / np.linalg.norm(w, ord=1)
         # w = np.random.dirichlet(np.ones(2))
@@ -187,7 +179,7 @@ if __name__ == '__main__':
         #     hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor))
         # elif args.method == 'crl-energy':
         #     hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor), alpha=1e-5)
-        realc = real_sol.dot(w).max() * w_e
+        # realc = real_sol.dot(w).max() * w_e
         # qc = w_e
         # if args.method == 'crl-naive':
         #     qc = hq.data[0] * w_e
@@ -204,7 +196,7 @@ if __name__ == '__main__':
             mask = env.env.get_action_out_mask()
             action = agent.act(state, preference=torch.from_numpy(w).type(FloatTensor), mask=mask)
             next_state, reward, terminal = env.step(action)
-            reward[0]=-reward[0]
+            reward[0]=1-reward[0]
             # reward[1]=env.env.get_distortion()
             # reward[1]=-reward[1]
             reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
@@ -218,8 +210,8 @@ if __name__ == '__main__':
         # q_y.append(qc[1])
         act_x.append(ttrw[0])
         act_y.append(ttrw[1])
-    trace_opt = dict(x=act_x[:20]+act_x[40:60]+act_x[80:],
-                     y=act_y[:20]+act_y[40:60]+act_y[80:],
+    trace_opt = dict(x=act_x,
+                     y=act_y,
                      mode="markers",
                      type='custom',
                      marker=dict(
@@ -227,216 +219,16 @@ if __name__ == '__main__':
                          size=3),
                      name='real')
 
-    act_opt = dict(x=act_x[20:40]+act_x[60:80],
-                   y=act_y[20:40]+act_y[60:80],
+    act_opt = dict(x=opt_x,
+                   y=opt_y,
                    mode="markers",
                    type='custom',
                    marker=dict(
                        symbol="circle",
                        size=3),
                    name='policy')
-
-    # q_opt = dict(x=q_x,
-    #              y=q_y,
-    #              mode="markers",
-    #              type='custom',
-    #              marker=dict(
-    #                  symbol="circle",
-    #                  size=1),
-    #              name='predicted')
-
-    # ## quantitative evaluation
-    # policy_loss = 0.0
-    # predict_loss = 0.0
-    # TEST_N = 5000.0
-    # for i in range(int(TEST_N)):
-    #     w = np.random.randn(6)
-    #     w = np.abs(w) / np.linalg.norm(w, ord=1)
-    #     # w = np.random.dirichlet(np.ones(2))
-    #     w_e = w / np.linalg.norm(w, ord=2)
-    #     if args.method == 'crl-naive' or args.method == 'crl-envelope':
-    #         hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor))
-    #     elif args.method == 'crl-energy':
-    #         hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor), alpha=1e-5)
-    #     realc = real_sol.dot(w).max() * w_e
-    #     qc = w_e
-    #     if args.method == 'crl-naive':
-    #         qc = hq.data[0] * w_e
-    #     elif args.method == 'crl-envelope':
-    #         qc = w.dot(hq.data.cpu().numpy().squeeze()) * w_e
-    #     elif args.method == 'crl-energy':
-    #         qc = w.dot(hq.data.cpu().numpy().squeeze()) * w_e
-    #     ttrw = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-    #     terminal = False
-    #     env.reset()
-    #     cnt = 0
-    #     while not terminal:
-    #         state = env.observe()
-    #         action = agent.act(state, preference=torch.from_numpy(w).type(FloatTensor))
-    #         next_state, reward, terminal = env.step(action)
-    #         if cnt > 30:
-    #             terminal = True
-    #         ttrw = ttrw + reward * np.power(args.gamma, cnt)
-    #         cnt += 1
-    #     ttrw_w = w.dot(ttrw) * w_e
-    #
-    #     base = np.linalg.norm(realc, ord=2)
-    #     policy_loss += np.linalg.norm(realc - ttrw_w, ord=2)/base
-    #     predict_loss += np.linalg.norm(realc - qc, ord=2)/base
-    #
-    # policy_loss /= TEST_N / 100
-    # predict_loss /= TEST_N / 100
-
-
-    # print("discrepancies (100*err): policy-{}|predict-{}".format(policy_loss, predict_loss))
-
-    # layout_opt = dict(title="FT Control Frontier - {} {}({:.3f}|{:.3f})".format(
-    #     args.method, args.name, policy_loss, predict_loss),
-    #     xaxis=dict(title='1st objective'),
-    #     yaxis=dict(title='2nd objective'))
     layout_opt = dict(title="FT Control Frontier - {} {}()".format(
         args.method, args.name),
         xaxis=dict(title='1st objective'),
         yaxis=dict(title='2nd objective'))
     vis._send({'data': [trace_opt, act_opt], 'layout': layout_opt})
-
-################# Pareto Frontier #################
-
-if args.pltpareto:
-
-    # setup the environment
-    env = MultiObjectiveEnv(args.env_name)
-
-    # generate an agent for plotting
-    agent = None
-    if args.method == 'crl-naive':
-        from crl.naive.meta import MetaAgent
-    elif args.method == 'crl-envelope':
-        from crl.envelope.meta import MetaAgent
-    elif args.method == 'crl-energy':
-        from crl.energy.meta import MetaAgent
-    model = torch.load("{}{}.pkl".format(args.save,
-                                         "m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
-    agent = MetaAgent(model, args, is_train=False)
-
-    # compute recovered Pareto
-    act = []
-
-    # predicted solution
-    pred = []
-
-    for i in range(200):  #2000
-        w = np.random.randn(6)
-        w = np.abs(w) / np.linalg.norm(w, ord=1)
-        # w = np.random.dirichlet(np.ones(6))
-        ttrw = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-        terminal = False
-        env.reset()
-        cnt = 0
-        if args.method == "crl-envelope":
-            hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor))
-            pred.append(hq.data.cpu().numpy().squeeze() * 1.0)
-        elif args.method == "crl-energy":
-            hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor), alpha=1e-5)
-            pred.append(hq.data.cpu().numpy().squeeze() * 1.0)
-        while not terminal:
-            state = env.observe()
-            action = agent.act(state, preference=torch.from_numpy(w).type(FloatTensor))
-            next_state, reward, terminal = env.step(action)
-            if cnt > 50:
-                terminal = True
-            ttrw = ttrw + reward * np.power(args.gamma, cnt)
-            cnt += 1
-
-        act.append(ttrw)
-
-    act = np.array(act)
-    cnt1, cnt2 = find_in(act, FRUITS, 0.0)
-    act_precition = cnt1 / len(act)
-    act_recall = cnt2 / len(FRUITS)
-    act_f1 = 2 * act_precition * act_recall / (act_precition + act_recall)
-    pred_f1 = 0.0
-    pred_precition = 0.0
-    pred_recall = 0.0
-
-    if not pred:
-        pred = act
-    else:
-        pred = np.array(pred)
-        cnt1, cnt2 = find_in(pred, FRUITS)
-        pred_precition = cnt1 / len(pred)
-        pred_recall = cnt2 / len(FRUITS)
-        if pred_precition > 1e-8 and pred_recall > 1e-8:
-            pred_f1 = 2 * pred_precition * pred_recall / (pred_precition + pred_recall)
-
-    FRUITS = np.tile(FRUITS, (30, 1))
-    ALL = np.concatenate([FRUITS, act, pred])
-    ALL = TSNE(n_components=2).fit_transform(ALL)
-    p1 = FRUITS.shape[0]
-    p2 = FRUITS.shape[0] + act.shape[0]
-
-    fruit = ALL[:p1, :]
-    act = ALL[p1:p2, :]
-    pred = ALL[p2:, :]
-
-    fruit_x, fruit_y = matrix2lists(fruit)
-    act_x, act_y = matrix2lists(act)
-    pred_x, pred_y = matrix2lists(pred)
-
-    # Create and style traces
-    trace_pareto = dict(x=fruit_x,
-                        y=fruit_y,
-                        mode="markers",
-                        type='custom',
-                        marker=dict(
-                            symbol="circle",
-                            size=10),
-                        name='Pareto')
-
-    act_pareto = dict(x=act_x,
-                      y=act_y,
-                      mode="markers",
-                      type='custom',
-                      marker=dict(
-                          symbol="circle",
-                          size=10),
-                      name='Recovered')
-
-    pred_pareto = dict(x=pred_x,
-                       y=pred_y,
-                       mode="markers",
-                       type='custom',
-                       marker=dict(
-                           symbol="circle",
-                           size=3),
-                       name='Predicted')
-
-    layout = dict(title="FT Pareto Frontier - {} {}({:.3f}|{:.3f})".format(
-        args.method, args.name, act_f1, pred_f1))
-
-    print("Precison: policy-{}|prediction-{}".format(act_precition, pred_precition))
-    print("Recall: policy-{}|prediction-{}".format(act_recall, pred_recall))
-    print("F1: policy-{}|prediction-{}".format(act_f1, pred_f1))
-
-    # send to visdom
-    if args.method == "crl-naive":
-        vis._send({'data': [trace_pareto, act_pareto], 'layout': layout})
-    elif args.method == "crl-envelope":
-        vis._send({'data': [trace_pareto, act_pareto, pred_pareto], 'layout': layout})
-    elif args.method == "crl-energy":
-        vis._send({'data': [trace_pareto, act_pareto, pred_pareto], 'layout': layout})
-
-################# HEATMAP #################
-
-if args.pltmap:
-    FRUITS_EMB = TSNE(n_components=2).fit_transform(FRUITS)
-    X, Y = matrix2lists(FRUITS_EMB)
-    trace_fruit_emb = dict(x=X, y=Y,
-                           mode="markers",
-                           type='custom',
-                           marker=dict(
-                               symbol="circle",
-                               size=10),
-                           name='Pareto')
-    layout = dict(title="FRUITS")
-    vis._send({'data': [trace_fruit_emb], 'layout': layout})
