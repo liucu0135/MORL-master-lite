@@ -155,6 +155,7 @@ class VVR_Simulator():
         reward=[]
         if not last==self.last_color:
             reward.append(1-self.ccm[last,self.last_color])
+            self.stepcc=self.ccm[last,self.last_color]
         else:
             reward.append(1)
         # reward.append(-self.get_distortion())
