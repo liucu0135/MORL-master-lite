@@ -162,12 +162,12 @@ if __name__ == '__main__':
     q_y = []
     act_x = []
     act_y = []
-    ws=np.arange(0,11)/10
+    ws=np.arange(0,110)/100
     opt_x,opt_y = read_result(args.bench_csv)
-    for i in range(11):  # $used to be 2000
+    for i in range(100):  # $used to be 2000
         print('doing test {}'.format(i))
 
-        w=i/10.0
+        w=i/100.0
         w=[w, 1-w]
 
 
