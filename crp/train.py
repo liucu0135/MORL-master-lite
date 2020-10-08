@@ -32,6 +32,8 @@ parser.add_argument('--weight-num', type=int, default=12, metavar='WN',
                     help='number of sampled weights per iteration')
 parser.add_argument('--episode-num', type=int, default=300, metavar='EN',
                     help='number of episodes for training')
+parser.add_argument('--num_orders', type=int, default=300, metavar='M',
+                    help='max size of the replay memory')
 parser.add_argument('--optimizer', default='Adam', metavar='OPT',
                     help='optimizer: Adam | RMSprop')
 parser.add_argument('--update-freq', type=int, default=4000, metavar='OPT',
