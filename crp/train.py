@@ -30,7 +30,7 @@ parser.add_argument('--epsilon-decay', default=True, action='store_true',
                     help='linear epsilon decay to zero')
 parser.add_argument('--weight-num', type=int, default=12, metavar='WN',
                     help='number of sampled weights per iteration')
-parser.add_argument('--episode-num', type=int, default=1000, metavar='EN',
+parser.add_argument('--episode-num', type=int, default=300, metavar='EN',
                     help='number of episodes for training')
 parser.add_argument('--optimizer', default='Adam', metavar='OPT',
                     help='optimizer: Adam | RMSprop')
@@ -47,7 +47,7 @@ parser.add_argument('--serialize', default=False, action='store_true',
                     help='serialize a model')
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='path for saving trained models')
-parser.add_argument('--name', default='uni_ex_uni_learn_sample_shaped_ccm', metavar='name',
+parser.add_argument('--name', default='uni_ex_uni_learn_sample_shaped_nc', metavar='name',
                     help='specify a name for saving the model')
 parser.add_argument('--log', default='crl/envelope/logs/', metavar='LOG',
                     help='path for recording training informtion')
