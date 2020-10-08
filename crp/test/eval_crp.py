@@ -5,6 +5,7 @@ import torch
 import numpy as np
 from sklearn.manifold import TSNE
 from read_result import read_result
+import pandas as pd
 
 import sys
 import os
@@ -26,6 +27,8 @@ parser.add_argument('--gamma', type=float, default=1, metavar='GAMMA',
                     help='gamma for infinite horizonal MDPs')
 parser.add_argument('--bench_csv', default='./test/bench.csv',
                     help='location for benchmark csv file')
+parser.add_argument('--num_orders', type=int, default=1000, metavar='M',
+                    help='max size of the replay memory')
 # PLOT
 parser.add_argument('--pltmap', default=False, action='store_true',
                     help='plot deep sea treasure map')
@@ -41,7 +44,7 @@ parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
 parser.add_argument('--name', default='uni_ex_uni_learn_sample_shaped_ccm', metavar='name',
                     help='specify a name for saving the model')
 # Useless but I am too laze to delete them
-parser.add_argument('--mem-size', type=int, default=10000, metavar='M',
+parser.add_argument('--mem_size', type=int, default=1000, metavar='M',
                     help='max size of the replay memory')
 parser.add_argument('--batch-size', type=int, default=256, metavar='B',
                     help='batch size')
@@ -122,13 +125,14 @@ def find_in(A, B, eps=0.2):
 if __name__ == '__main__':
     args = parser.parse_args()
     # setup the environment
-    env = MultiObjectiveEnv(args.env_name)
+    env = MultiObjectiveEnv(args)
     # torch.cuda.set_device(1)
     # get state / action / reward sizes
     state_size = len(env.state_spec)
     action_size = env.action_spec[2][1] - env.action_spec[2][0]
     reward_size = len(env.reward_spec)
-
+    # record the result to csv
+    record_data=[]
     # generate an agent for initial training
     agent = None
     if args.method == 'crl-naive':
@@ -200,16 +204,17 @@ if __name__ == '__main__':
             # reward[1]=env.env.get_distortion()
             # reward[1]=-reward[1]
             reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
-            if cnt > 1000:
+            if cnt > args.num_orders:
                 terminal = True
             ttrw = ttrw + reward #* np.power(args.gamma, cnt)
             cnt += 1
-        ttrw_w = w.dot(ttrw) * w_e
+        # ttrw_w = w.dot(ttrw) * w_e
 
         # q_x.append(qc[0])
         # q_y.append(qc[1])
         act_x.append(ttrw[0])
         act_y.append(ttrw[1])
+        record_data.append(ttrw)
     trace_opt = dict(x=act_x,
                      y=act_y,
                      mode="markers",
@@ -232,3 +237,5 @@ if __name__ == '__main__':
         xaxis=dict(title='1st objective'),
         yaxis=dict(title='2nd objective'))
     vis._send({'data': [trace_opt, act_opt], 'layout': layout_opt})
+    df=pd.DataFrame.from_records(record_data)
+    df.to_csv('result_{}.csv'.format(args.name))

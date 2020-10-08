@@ -11,7 +11,7 @@ from .VVR_Bank import VVR_Bank as Bank
 #   2. create self.terminal: count remaining orders inside sim object
 #   3. create self.reward:   calculate reward inside sim object
 class VVR_Simulator():
-    def __init__(self, num_color=14, num_model=10, capacity=7*8*6//10, num_lanes=7, on=300, lane_length=8, cc_file='envs/cost.csv',color_dist_file='envs/total_orders.csv'):
+    def __init__(self, args=None, num_color=14, num_model=10, capacity=7*8*6//10, num_lanes=7,lane_length=8, cc_file='envs/cost.csv',color_dist_file='envs/total_orders.csv'):
         self.num_color = num_color
         self.num_model = num_model
         self.num_lanes = num_lanes
@@ -21,7 +21,10 @@ class VVR_Simulator():
         self.capacity = capacity
         self.terminal = False
         self.color_dist_file=color_dist_file
-        self.orders_num=on
+        if args:
+            self.orders_num=args.num_orders
+        else:
+            self.orders_num=300
         self.state_len=self.num_model*self.num_lanes*(self.lane_length+2)+(max(self.num_color,self.num_model)+6)*(max(self.num_color,self.num_model))
         self.reward_spec = [[0, 100], [0, 1000]]
         self.state_spec = [['discrete', 1, [0, self.num_lanes-10]]]*self.state_len

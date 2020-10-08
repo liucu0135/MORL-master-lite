@@ -7,7 +7,8 @@ from .VVR_Simulator import VVR_Simulator
 
 class MultiObjectiveEnv(object):
 
-    def __init__(self, env_name="deep_sea_treasure"):
+    def __init__(self, args):
+        env_name=args.env_name
         if env_name == "dst":
             self.env = DeepSeaTreasure()
             self.state_spec = self.env.state_spec
@@ -19,7 +20,7 @@ class MultiObjectiveEnv(object):
             self.action_spec = self.env.action_spec
             self.reward_spec = self.env.reward_spec
         if env_name == "crp":
-            self.env = VVR_Simulator()
+            self.env = VVR_Simulator(args=args)
             self.state_spec = self.env.state_spec
             self.action_spec = self.env.action_spec
             self.reward_spec = self.env.reward_spec
