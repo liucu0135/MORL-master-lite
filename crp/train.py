@@ -172,7 +172,7 @@ def train(env, agent, args):
 if __name__ == '__main__':
     args = parser.parse_args()
     # setup the environment
-    env = MultiObjectiveEnv(args.env_name)
+    env = MultiObjectiveEnv(args)
     torch.cuda.set_device(0)
     # get state / action / reward sizes
     state_size = len(env.state_spec)
