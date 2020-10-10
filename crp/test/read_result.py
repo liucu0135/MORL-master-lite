@@ -20,7 +20,7 @@ def find_pareto(data):
                 break
         if not dominated:
             prt.append(s)
-    prt=numpy.stack(prt,axis=0)
+    prt=np.stack(prt,axis=0)
     if len(prt)<data.shape[0]:
         prt=find_pareto(prt)
     return prt
