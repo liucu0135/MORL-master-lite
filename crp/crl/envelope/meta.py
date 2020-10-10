@@ -80,8 +80,8 @@ class MetaAgent(object):
         # random pick a preference if it is not specified
         if preference is None:
             if self.w_kept is None:
-                self.w_kept=np.abs(np.random.uniform(0,1))
-                # self.w_kept=np.abs(np.random.normal(0,0.3))
+                # self.w_kept=np.abs(np.random.uniform(0,1))
+                self.w_kept=np.abs(np.random.normal(0,0.3))
 
                 if np.random.rand()<0.5:
                     self.w_kept = torch.Tensor([1-self.w_kept, self.w_kept])
