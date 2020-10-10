@@ -44,12 +44,13 @@ parser.add_argument('--homotopy', default=True, action='store_true',
                     help='use homotopy optimization method')
 parser.add_argument('--cc_file', default='envs/cost.csv', metavar='SAVE',
                     help='path for saving trained models')
+parser.add_argument('--cc', default=False, action='store_true')
 # LOG & SAVING
 parser.add_argument('--serialize', default=False, action='store_true',
                     help='serialize a model')
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='path for saving trained models')
-parser.add_argument('--name', default='norm_ex_norm_learn_sample_shaped_cc', metavar='name',
+parser.add_argument('--name', default='norm_ex_norm_learn_sample_shaped_nc', metavar='name',
                     help='specify a name for saving the model')
 parser.add_argument('--log', default='crl/envelope/logs/', metavar='LOG',
                     help='path for recording training informtion')
