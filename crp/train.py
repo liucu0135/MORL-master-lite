@@ -50,7 +50,7 @@ parser.add_argument('--serialize', default=False, action='store_true',
                     help='serialize a model')
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='path for saving trained models')
-parser.add_argument('--name', default='norm_ex_norm_learn015_sample_shaped_nc', metavar='name',
+parser.add_argument('--name', default='norm_ex_norm_learn005_sample_shaped_nc', metavar='name',
                     help='specify a name for saving the model')
 parser.add_argument('--log', default='crl/envelope/logs/', metavar='LOG',
                     help='path for recording training informtion')
