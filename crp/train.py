@@ -44,7 +44,7 @@ parser.add_argument('--homotopy', default=True, action='store_true',
                     help='use homotopy optimization method')
 parser.add_argument('--cc_file', default='envs/cost.csv', metavar='SAVE',
                     help='path for saving trained models')
-parser.add_argument('--cc', default=False, action='store_true')
+parser.add_argument('--cc', default=True, action='store_false')
 # LOG & SAVING
 parser.add_argument('--serialize', default=False, action='store_true',
                     help='serialize a model')
