@@ -16,7 +16,7 @@ class VVR_Simulator():
         self.num_model = num_model
         self.num_lanes = num_lanes
         self.target_color=-1
-        self.last_cc=0
+        self.stepcc=0
         self.lane_length = lane_length
         self.rewards = [1, 0, -1]  # [0]for unchange, [1]for change, [2]for error
         self.capacity = capacity

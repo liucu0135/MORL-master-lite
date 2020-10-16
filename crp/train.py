@@ -117,7 +117,7 @@ def train(env, agent, args):
             tot_reward = tot_reward + (probe.cpu().numpy().dot(reward))
             act1+=reward[0]
             act2+=reward[1]
-            tot_reward_nc = tot_reward_nc + env.env.last_cc
+            tot_reward_nc = tot_reward_nc + env.env.stepcc
             tot_reward_dist= tot_reward_dist + env.env.get_distortion(absolute=True, tollerance=0)/10
             cnt = cnt + 1
 
