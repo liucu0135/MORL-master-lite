@@ -16,6 +16,7 @@ class VVR_Simulator():
         self.num_model = num_model
         self.num_lanes = num_lanes
         self.target_color=-1
+        self.last_cc=0
         self.lane_length = lane_length
         self.rewards = [1, 0, -1]  # [0]for unchange, [1]for change, [2]for error
         self.capacity = capacity
@@ -67,6 +68,10 @@ class VVR_Simulator():
         ######### new components ###########
         self.terminal=False
         self.current_state = self.get_out_tensor()
+
+
+
+
 
     def read_cc_matrix(self,cc_file):
         ccm=pd.read_csv(cc_file)
@@ -167,7 +172,8 @@ class VVR_Simulator():
         # reward.append(-self.get_distortion())
         # step=1
 
-        reward.append((2-self.get_distortion()/100))#*(1-step)+step*(-self.get_distortion(absolute=True, tollerance=0)/10))
+        # reward.append((2-self.get_distortion()/100))
+        reward.append((200-self.get_distortion()))
         # reward.append(-self.get_distortion(absolute=True, tollerance=0)/10)
         self.current_state=self.observe()
         if len(self.start_sequencec)<self.capacity:
@@ -322,6 +328,7 @@ class VVR_Simulator():
             self.mc_tab[model, color] -= 1
             if not (color == self.last_color):
                 self.cc += self.ccm[color, self.last_color]
+                self.last_cc=self.ccm[color, self.last_color]
                 self.last_color = color
             k=self.find_nearest_order(model,color)
             self.plan_list.pop(k)

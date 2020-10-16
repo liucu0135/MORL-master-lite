@@ -44,13 +44,13 @@ parser.add_argument('--homotopy', default=True, action='store_true',
                     help='use homotopy optimization method')
 parser.add_argument('--cc_file', default='envs/cost.csv', metavar='SAVE',
                     help='path for saving trained models')
-parser.add_argument('--cc', default=True, action='store_false')
+parser.add_argument('--cc', default=False, action='store_false')
 # LOG & SAVING
 parser.add_argument('--serialize', default=False, action='store_true',
                     help='serialize a model')
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='path for saving trained models')
-parser.add_argument('--name', default='norm_ex_norm_learn005_sample_shaped_nc', metavar='name',
+parser.add_argument('--name', default='2dnorm_sample_shaped_nc', metavar='name',
                     help='specify a name for saving the model')
 parser.add_argument('--log', default='crl/envelope/logs/', metavar='LOG',
                     help='path for recording training informtion')
@@ -117,10 +117,11 @@ def train(env, agent, args):
             tot_reward = tot_reward + (probe.cpu().numpy().dot(reward))
             act1+=reward[0]
             act2+=reward[1]
-            tot_reward_nc = tot_reward_nc + reward[0]
+            tot_reward_nc = tot_reward_nc + env.env.last_cc
             tot_reward_dist= tot_reward_dist + env.env.get_distortion(absolute=True, tollerance=0)/10
             cnt = cnt + 1
 
+        agent.update_qr(tot_reward_nc,tot_reward_dist, act1,act2)
         # _, q = agent.predict(probe, initial_state=initial_state)
 
         # if args.env_name == "dst":
@@ -142,13 +143,13 @@ def train(env, agent, args):
         # elif args.method == "crl-energy":
         #     act_1 = probe.dot(act_1.data)
         #     act_2 = probe.dot(act_2.data)
-        print("end of eps %d with total reward (1) %0.2f, the Q is %0.2f | %0.2f; loss: %0.4f;  total_nc: %0.2f; total_dist: %0.2f;beta : %0.2f;eps : %0.2f;" % (
+        print("end of eps %d with total reward (1) %0.2f, the Q is %0.2f | %0.2f; loss: %0.4f;  total_nc: %0.2f; total_dist: %0.2f; conv: %0.2f" % (
             num_eps,
             tot_reward,
             act_1,
             act_2,
             # q__max,
-            loss / cnt,tot_reward_nc,tot_reward_dist, agent.beta, agent.epsilon))
+            loss / cnt,tot_reward_nc,tot_reward_dist,agent.preference_cov))
         # print("t_obs : %0.2f;t_policy : %0.2f;t_step : %0.2f;t_mem : %0.2f;t_learn : %0.2f;t_reset : %0.2f" % (
         #     t_obs,
         #     t_policy,
@@ -184,15 +185,10 @@ if __name__ == '__main__':
 
     # generate an agent for initial training
     agent = None
-    if args.method == 'crl-naive':
-        from crl.naive.meta import MetaAgent
-        from crl.naive.models import get_new_model
-    elif args.method == 'crl-envelope':
-        from crl.envelope.meta import MetaAgent
-        from crl.envelope.models import get_new_model
-    elif args.method == 'crl-energy':
-        from crl.energy.meta import MetaAgent
-        from crl.energy.models import get_new_model
+
+    from crl.envelope.meta import MetaAgent
+    from crl.envelope.models import get_new_model
+
 
     if args.serialize:
         model = torch.load("{}{}.pkl".format(args.save,
