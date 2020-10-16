@@ -143,13 +143,13 @@ def train(env, agent, args):
         # elif args.method == "crl-energy":
         #     act_1 = probe.dot(act_1.data)
         #     act_2 = probe.dot(act_2.data)
-        print("end of eps %d with total reward (1) %0.2f, the Q is %0.2f | %0.2f; loss: %0.4f;  total_nc: %0.2f; total_dist: %0.2f; conv: %0.2f" % (
+        print("end of eps %d with total reward (1) %0.2f, the Q is %0.2f | %0.2f; loss: %0.4f;  total_nc: %0.2f; total_dist: %0.2f; conv: %0.2f  , %0.2f" % (
             num_eps,
             tot_reward,
             act_1,
             act_2,
             # q__max,
-            loss / cnt,tot_reward_nc,tot_reward_dist,agent.preference_cov))
+            loss / cnt,tot_reward_nc,tot_reward_dist,agent.preference_cov[0,0],agent.preference_cov[1,1]))
         # print("t_obs : %0.2f;t_policy : %0.2f;t_step : %0.2f;t_mem : %0.2f;t_learn : %0.2f;t_reset : %0.2f" % (
         #     t_obs,
         #     t_policy,
