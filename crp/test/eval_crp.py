@@ -29,7 +29,7 @@ parser.add_argument('--bench_csv', default='./test/bench.csv',
                     help='location for benchmark csv file')
 parser.add_argument('--num_orders', type=int, default=1000, metavar='M',
                     help='max size of the replay memory')
-parser.add_argument('--cc', default=False, action='store_false')
+parser.add_argument('--cc', default=True, action='store_false')
 # PLOT
 parser.add_argument('--pltmap', default=False, action='store_true',
                     help='plot deep sea treasure map')
@@ -43,7 +43,7 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
 
-parser.add_argument('--name', default='2dnorm_sample_shaped_nc', metavar='name',
+parser.add_argument('--name', default='2dnorm_sample_shaped_cc', metavar='name',
                     help='specify a name for saving the model')
 # Useless but I am too laze to delete them
 parser.add_argument('--mem_size', type=int, default=1000, metavar='M',
