@@ -206,8 +206,10 @@ class MetaAgent(object):
         self.moving_avg_r2=self.moving_avg_r1*(1-beta)+abs(r2*beta)
         self.moving_avg_tr1=self.moving_avg_tr1*(1-beta)+abs(tr1*beta)
         self.moving_avg_tr2=self.moving_avg_tr2*(1-beta)+abs(tr2*beta)
-        self.preference_cov[0,0]=self.moving_avg_tr1 / self.moving_avg_r1
-        self.preference_cov[1,1]=self.moving_avg_tr2 / self.moving_avg_r2
+        self.preference_cov[0,0]=1 / self.moving_avg_r1
+        self.preference_cov[1,1]=1 / self.moving_avg_r2
+        # self.preference_cov[0,0]=self.moving_avg_tr1 / self.moving_avg_r1
+        # self.preference_cov[1,1]=self.moving_avg_tr2 / self.moving_avg_r2
 
 
         # return self.moving_avg_tr1,self.moving_avg_tr2,self.moving_avg_r1,self.moving_avg_r2
