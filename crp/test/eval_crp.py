@@ -27,7 +27,7 @@ parser.add_argument('--gamma', type=float, default=1, metavar='GAMMA',
                     help='gamma for infinite horizonal MDPs')
 parser.add_argument('--bench_csv', default='./test/bench.csv',
                     help='location for benchmark csv file')
-parser.add_argument('--num_orders', type=int, default=1000, metavar='M',
+parser.add_argument('--num_orders', type=int, default=300, metavar='M',
                     help='max size of the replay memory')
 parser.add_argument('--cc', default=True, action='store_false')
 # PLOT
@@ -42,8 +42,11 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 # LOG & SAVING
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
+parser.add_argument('--exact_orders', default='test/distribute_result_s6_0.csv', metavar='SAVE',
+                    help='address for saving trained models')
 
-parser.add_argument('--name', default='corected_2dnorm_sample_shaped_cc', metavar='name',
+
+parser.add_argument('--name', default='2dnorm_sample_shaped_nc', metavar='name',
                     help='specify a name for saving the model')
 # Useless but I am too laze to delete them
 parser.add_argument('--mem_size', type=int, default=1000, metavar='M',
@@ -170,10 +173,10 @@ if __name__ == '__main__':
     act_y = []
     ws=np.arange(0,110)/100
     opt_x,opt_y = read_result(args.bench_csv)
-    for i in range(100):  # $used to be 2000
+    for i in range(10):  # $used to be 2000
         print('doing test {}'.format(i))
 
-        w=i/100.0
+        w=i/10.0
         w=[w, 1-w]
 
 
@@ -206,7 +209,7 @@ if __name__ == '__main__':
             # reward[1]=env.env.get_distortion()
             # reward[1]=-reward[1]
             reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
-            if cnt > args.num_orders:
+            if cnt > env.env.orders_num-50:
                 terminal = True
             ttrw = ttrw + reward #* np.power(args.gamma, cnt)
             cnt += 1

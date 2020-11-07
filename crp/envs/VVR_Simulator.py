@@ -21,11 +21,17 @@ class VVR_Simulator():
         self.rewards = [1, 0, -1]  # [0]for unchange, [1]for change, [2]for error
         self.capacity = capacity
         self.terminal = False
-        if args:
-            self.orders_num=args.num_orders
-            cc=args.cc
-        else:
-            self.orders_num=300
+        # if args:
+        #     self.orders_num=args.num_orders
+        #     cc=args.cc
+        # else:
+        #     self.orders_num=300
+
+        self.fix_models, self.fix_colors=self.read_in_orders(args.exact_orders)
+        self.orders_num=300
+        # self.orders_num=len(self.fix_models)
+
+
         self.state_len=self.num_model*self.num_lanes*(self.lane_length+2)+(max(self.num_color,self.num_model)+6)*(max(self.num_color,self.num_model))
         self.reward_spec = [[0, 100], [0, 1000]]
         self.state_spec = [['discrete', 1, [0, self.num_lanes-10]]]*self.state_len
@@ -40,17 +46,36 @@ class VVR_Simulator():
             self.model_dist = self.color_dist[:self.num_model] / sum(self.color_dist[:self.num_model])
         self.reset()
 
+    def read_in_orders(self, path):
+        orders=pd.read_csv(path,encoding='unicode_escape')
+        models=orders['Model']
+        colors=orders['Color']
+        count=0
+        mdict={}
+        for k in colors:
+            if k not in mdict:
+                mdict[k]=count
+                count+=1
+        models=list(models)
+        colors=[mdict[c] for c in colors]
+        return models, colors
+
+
+
+
     def reset(self):
-        # self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
-        # self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
-        if self.color_dist_file is not None:
-            self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num, p=self.color_dist).tolist()
-        else:
-            self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
-        if self.color_dist_file is not None:
-            self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num, p=self.model_dist).tolist()
-        else:
-            self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
+        self.start_sequencec = self.fix_colors[:]
+        self.start_sequencem = self.fix_models[:]
+        self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
+        self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
+        # if self.color_dist_file is not None:
+        #     self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num, p=self.color_dist).tolist()
+        # else:
+        #     self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
+        # if self.color_dist_file is not None:
+        #     self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num, p=self.model_dist).tolist()
+        # else:
+        #     self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
 
         self.bank = Bank(fix_init=True, num_of_colors=self.num_model, sequence=self.start_sequencem,
                          num_of_lanes=self.num_lanes,
