@@ -54,6 +54,8 @@ parser.add_argument('--name', default='corected_2dnorm_sample_shaped_cc', metava
                     help='specify a name for saving the model')
 parser.add_argument('--log', default='crl/envelope/logs/', metavar='LOG',
                     help='path for recording training informtion')
+parser.add_argument('--exact_orders', default='test/distribute_result_s6_0.csv', metavar='SAVE',
+                    help='address for saving trained models')
 
 use_cuda = torch.cuda.is_available()
 FloatTensor = torch.cuda.FloatTensor if use_cuda else torch.FloatTensor
