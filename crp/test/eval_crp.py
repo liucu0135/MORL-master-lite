@@ -138,6 +138,8 @@ if __name__ == '__main__':
     reward_size = len(env.reward_spec)
     # record the result to csv
     record_data=[]
+    record_order_m=[]
+    record_order_c=[]
     # generate an agent for initial training
     agent = None
 
@@ -195,6 +197,8 @@ if __name__ == '__main__':
         terminal = False
         env.reset()
         cnt = 0
+        r_m=[]
+        r_c=[]
         while not terminal:
             state = env.observe()
             mask = env.env.get_action_out_mask()
@@ -207,13 +211,17 @@ if __name__ == '__main__':
             if cnt > env.env.orders_num-50:
                 terminal = True
             ttrw = ttrw + reward #* np.power(args.gamma, cnt)
+            r_c.append(env.env.last_color)
+            r_m.append(env.env.last_model)
             cnt += 1
         # ttrw_w = w.dot(ttrw) * w_e
-
+        record_order_c.append(r_c)
+        record_order_m.append(r_m)
         # q_x.append(qc[0])
         # q_y.append(qc[1])
         act_x.append(ttrw[0])
         act_y.append(ttrw[1])
+
         record_data.append(ttrw)
     trace_opt = dict(x=act_x,
                      y=act_y,
@@ -238,4 +246,9 @@ if __name__ == '__main__':
         yaxis=dict(title='2nd objective'))
     vis._send({'data': [trace_opt, act_opt], 'layout': layout_opt})
     df=pd.DataFrame.from_records(record_data)
+    dfc=pd.DataFrame.from_records(record_order_c)
+    dfm=pd.DataFrame.from_records(record_order_m)
+
+    dfc.to_csv('result_order_c_{}.csv'.format(args.name))
+    dfm.to_csv('result_order_m_{}.csv'.format(args.name))
     df.to_csv('result_{}.csv'.format(args.name))

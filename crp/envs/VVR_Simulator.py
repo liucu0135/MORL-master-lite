@@ -358,6 +358,7 @@ class VVR_Simulator():
             k=self.find_nearest_order(model,color)
             self.plan_list.pop(k)
             self.released_order_index=k
+            self.last_model=model
             return True  # return True if the release success
         else:
             return False  # return false if the corresponding model and color was not needed anymore
