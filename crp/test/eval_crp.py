@@ -42,7 +42,7 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 # LOG & SAVING
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
-parser.add_argument('--exact_orders', default='test/distribute_result_s6_0.csv', metavar='SAVE',
+parser.add_argument('--exact_orders', default='test/distribute_result_s6_1.csv', metavar='SAVE',
                     help='address for saving trained models')
 
 
@@ -140,15 +140,10 @@ if __name__ == '__main__':
     record_data=[]
     # generate an agent for initial training
     agent = None
-    if args.method == 'crl-naive':
-        from crl.naive.meta import MetaAgent
-        from crl.naive.models import get_new_model
-    elif args.method == 'crl-envelope':
-        from crl.envelope.meta import MetaAgent
-        from crl.envelope.models import get_new_model
-    elif args.method == 'crl-energy':
-        from crl.energy.meta import MetaAgent
-        from crl.energy.models import get_new_model
+
+    from crl.envelope.meta import MetaAgent
+    from crl.envelope.models import get_new_model
+
 
     model = get_new_model(args.model, state_size, action_size, reward_size)
     agent = MetaAgent(model, args, is_train=True)
