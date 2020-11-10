@@ -42,7 +42,7 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 # LOG & SAVING
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
-parser.add_argument('--exact_orders', default='test/distribute_result_s6_0.csv', metavar='SAVE',
+parser.add_argument('--exact_orders', default='test/distribute_result_s6_1.csv', metavar='SAVE',
                     help='address for saving trained models')
 
 
@@ -249,6 +249,6 @@ if __name__ == '__main__':
     dfc=pd.DataFrame.from_records(record_order_c)
     dfm=pd.DataFrame.from_records(record_order_m)
 
-    dfc.to_csv('result_order_c_0.csv'.format(args.name))
-    dfm.to_csv('result_order_m_0.csv'.format(args.name))
+    dfc.to_csv('result_order_c_1.csv'.format(args.name))
+    dfm.to_csv('result_order_m_1.csv'.format(args.name))
     df.to_csv('result_{}.csv'.format(args.name))
