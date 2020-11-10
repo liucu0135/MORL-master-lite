@@ -28,8 +28,8 @@ class VVR_Simulator():
         #     self.orders_num=300
 
         self.fix_models, self.fix_colors=self.read_in_orders(args.exact_orders)
-        self.orders_num=300
-        # self.orders_num=len(self.fix_models)
+        # self.orders_num=300
+        self.orders_num=len(self.fix_models)
 
 
         self.state_len=self.num_model*self.num_lanes*(self.lane_length+2)+(max(self.num_color,self.num_model)+6)*(max(self.num_color,self.num_model))
