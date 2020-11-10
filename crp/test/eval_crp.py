@@ -42,7 +42,7 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 # LOG & SAVING
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
-parser.add_argument('--exact_orders', default='test/distribute_result_s6_2.csv', metavar='SAVE',
+parser.add_argument('--exact_orders', default='test/distribute_result_s6_0.csv', metavar='SAVE',
                     help='address for saving trained models')
 
 
