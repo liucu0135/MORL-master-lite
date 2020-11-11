@@ -42,6 +42,8 @@ parser.add_argument('--beta', type=float, default=0.02, metavar='BETA',
                     help='(initial) beta for evelope algorithm, default = 0.01')
 parser.add_argument('--homotopy', default=True, action='store_true',
                     help='use homotopy optimization method')
+parser.add_argument('--load_checkpoint', default='2dnorm_sample_shaped_nc',
+                    help='location for benchmark csv file')
 parser.add_argument('--cc_file', default='envs/cost.csv', metavar='SAVE',
                     help='path for saving trained models')
 parser.add_argument('--cc', default=True, action='store_false')
@@ -195,6 +197,9 @@ if __name__ == '__main__':
     if args.serialize:
         model = torch.load("{}{}.pkl".format(args.save,
                                              "m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
+    if args.load_checkpoint:
+        dicts = torch.load('m.conv_e.crp_n.2dnorm_sample_shaped_nc.pth.tar')
+        model.load_state_dict(dicts)
     else:
         model = get_new_model(args.model, state_size, action_size, reward_size)
     agent = MetaAgent(model, args, is_train=True)
