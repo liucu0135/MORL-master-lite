@@ -30,6 +30,7 @@ parser.add_argument('--bench_csv', default='./test/bench.csv',
 parser.add_argument('--num_orders', type=int, default=500, metavar='M',
                     help='max size of the replay memory')
 parser.add_argument('--cc', default=True, action='store_false')
+parser.add_argument('--eval', default=True, action='store_false')
 # PLOT
 parser.add_argument('--pltmap', default=False, action='store_true',
                     help='plot deep sea treasure map')

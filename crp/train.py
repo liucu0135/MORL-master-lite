@@ -17,6 +17,7 @@ parser.add_argument('--model', default='conv', metavar='MODELS',
                     help='linear | cnn | cnn + lstm')
 parser.add_argument('--gamma', type=float, default=1, metavar='GAMMA',
                     help='gamma for infinite horizonal MDPs')
+parser.add_argument('--eval', default=False, action='store_false')
 # TRAINING
 parser.add_argument('--mem-size', type=int, default=100000, metavar='M',
                     help='max size of the replay memory')

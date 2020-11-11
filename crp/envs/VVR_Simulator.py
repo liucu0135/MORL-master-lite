@@ -66,12 +66,15 @@ class VVR_Simulator():
 
 
     def reset(self):
+        if self.args.eval:
+            self.fix_models, self.fix_colors = self.read_in_orders(self.args.exact_orders)
+        else:
+            if np.random.uniform(0,1)>0.5:
+                self.fix_models, self.fix_colors=self.read_in_orders(self.args.exact_orders)
+            else:
+                self.fix_models, self.fix_colors = self.read_in_orders(self.args.exact_orders2)
         self.start_sequencec = self.fix_colors[:]
         self.start_sequencem = self.fix_models[:]
-        if np.random.uniform(0,1)>0.5:
-            self.fix_models, self.fix_colors=self.read_in_orders(self.args.exact_orders)
-        else:
-            self.fix_models, self.fix_colors = self.read_in_orders(self.args.exact_orders2)
         self.orders_num=500#len(self.fix_models)
         # self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
         # self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
