@@ -203,7 +203,7 @@ if __name__ == '__main__':
 
     if args.load_checkpoint:
         dicts = torch.load('crl/envelope/saved2/m.conv_e.crp_n.2dnorm_sample_shaped_nc.pth.tar')
-        model.load_state_dict(dicts)
+        model.load_state_dict(dicts['state_dict'])
     agent = MetaAgent(model, args, is_train=True)
 
     train(env, agent, args)
