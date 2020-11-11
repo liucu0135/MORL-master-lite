@@ -70,8 +70,8 @@ class VVR_Simulator():
     def reset(self):
         self.start_sequencec = self.fix_colors[:]
         self.start_sequencem = self.fix_models[:]
-        self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
-        self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
+        # self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
+        # self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
         # if self.color_dist_file is not None:
         #     self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num, p=self.color_dist).tolist()
         # else:
