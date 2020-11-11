@@ -60,8 +60,8 @@ class VVR_Simulator():
         #     if k not in mdict:
         #         mdict[k]=count
         #         count+=1
-        # models=list(models)
-        colors=[ord(c)-64 for c in colors]
+        models=list(models)
+        colors=[ord(c)-65 for c in colors]
         return models, colors
 
 
