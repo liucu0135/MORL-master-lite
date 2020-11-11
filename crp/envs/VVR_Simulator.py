@@ -55,13 +55,13 @@ class VVR_Simulator():
         models=orders['Model']
         colors=orders['Color']
         count=0
-        mdict={}
-        for k in colors:
-            if k not in mdict:
-                mdict[k]=count
-                count+=1
-        models=list(models)
-        colors=[mdict[c] for c in colors]
+        # mdict={}
+        # for k in colors:
+        #     if k not in mdict:
+        #         mdict[k]=count
+        #         count+=1
+        # models=list(models)
+        colors=[ord(c)-64 for c in colors]
         return models, colors
 
 
