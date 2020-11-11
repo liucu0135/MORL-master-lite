@@ -198,11 +198,12 @@ if __name__ == '__main__':
     if args.serialize:
         model = torch.load("{}{}.pkl".format(args.save,
                                              "m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
+    else:
+        model = get_new_model(args.model, state_size, action_size, reward_size)
+
     if args.load_checkpoint:
         dicts = torch.load('crl/envelope/saved2/m.conv_e.crp_n.2dnorm_sample_shaped_nc.pth.tar')
         model.load_state_dict(dicts)
-    else:
-        model = get_new_model(args.model, state_size, action_size, reward_size)
     agent = MetaAgent(model, args, is_train=True)
 
     train(env, agent, args)
