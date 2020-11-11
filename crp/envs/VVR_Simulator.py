@@ -21,6 +21,7 @@ class VVR_Simulator():
         self.rewards = [1, 0, -1]  # [0]for unchange, [1]for change, [2]for error
         self.capacity = capacity
         self.terminal = False
+        self.args=args
         # if args:
         #     self.orders_num=args.num_orders
         #     cc=args.cc
