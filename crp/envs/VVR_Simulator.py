@@ -27,9 +27,7 @@ class VVR_Simulator():
         # else:
         #     self.orders_num=300
 
-        self.fix_models, self.fix_colors=self.read_in_orders(args.exact_orders)
-        # self.orders_num=300
-        self.orders_num=len(self.fix_models)
+
 
 
         self.state_len=self.num_model*self.num_lanes*(self.lane_length+2)+(max(self.num_color,self.num_model)+6)*(max(self.num_color,self.num_model))
@@ -70,6 +68,11 @@ class VVR_Simulator():
     def reset(self):
         self.start_sequencec = self.fix_colors[:]
         self.start_sequencem = self.fix_models[:]
+        if np.random.uniform(0,1)>0.5:
+            self.fix_models, self.fix_colors=self.read_in_orders(self.args.exact_orders)
+        else:
+            self.fix_models, self.fix_colors = self.read_in_orders(self.args.exact_orders2)
+        self.orders_num=500#len(self.fix_models)
         # self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
         # self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
         # if self.color_dist_file is not None:
