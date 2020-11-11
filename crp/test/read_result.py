@@ -3,7 +3,6 @@ import struct
 import numpy as np
 import matplotlib.pyplot as plt
 import copy
-
 def find_pareto(data):
     prt=[]
     # set=numpy.split(set, axis=0)
