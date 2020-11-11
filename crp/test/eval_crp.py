@@ -46,7 +46,7 @@ parser.add_argument('--exact_orders', default='test/distribute_result_s6_1.csv',
                     help='address for saving trained models')
 
 
-parser.add_argument('--name', default='sixchpt_cc', metavar='name',
+parser.add_argument('--name', default='2dnorm_sample_shaped_nc', metavar='name',
                     help='specify a name for saving the model')
 # Useless but I am too laze to delete them
 parser.add_argument('--mem_size', type=int, default=1000, metavar='M',
@@ -156,8 +156,9 @@ if __name__ == '__main__':
     reward_size = len(env.reward_spec)
 
     model = get_new_model(args.model, state_size, action_size, reward_size)
-    dicts=torch.load("{}{}.pth.tar".format(args.save,
-                                         "m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
+    dicts=torch.load("{}{}.pth.tar".format(args.save,"m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
+    # dicts=torch.load("{}{}.pth.tar".format(args.save,"m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
+
     model.load_state_dict(dicts['state_dict'])
     agent = MetaAgent(model, args, is_train=False)
 
@@ -209,6 +210,7 @@ if __name__ == '__main__':
             # reward[1]=-reward[1]
             reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
             if cnt > env.env.orders_num-50:
+
                 terminal = True
             ttrw = ttrw + reward #* np.power(args.gamma, cnt)
             r_c.append(env.env.last_color)

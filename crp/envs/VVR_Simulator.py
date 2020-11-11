@@ -40,8 +40,12 @@ class VVR_Simulator():
         if not cc:
             self.ccm=np.ones_like(self.ccm)-np.identity(self.ccm.shape[0])
             color_dist_file=None
+            print('nc is used')
+            print(self.ccm)
         self.color_dist_file = color_dist_file
         if color_dist_file :
+            print('cc and color dist are used')
+            print(self.ccm)
             self.color_dist=self.read_color_dist(color_dist_file)
             self.model_dist = self.color_dist[:self.num_model] / sum(self.color_dist[:self.num_model])
         self.reset()
