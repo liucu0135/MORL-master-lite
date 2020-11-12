@@ -209,10 +209,10 @@ class VVR_Simulator():
         # step=1
 
         # reward.append((2-self.get_distortion()/100))
-        reward.append((2-self.get_distortion()/100))
+        reward.append((2-self.get_distortion(tollerance=0)/100))
         # reward.append(-self.get_distortion(absolute=True, tollerance=0)/10)
         self.current_state=self.observe()
-        if len(self.start_sequencec)<self.capacity:
+        if len(self.start_sequencec)<1:
             self.terminal=True
         return self.current_state, np.stack(reward), self.terminal
 
@@ -287,7 +287,7 @@ class VVR_Simulator():
 
     def step_forward_out_semi_rl(self):
         last = self.last_color
-        if 1:
+        if len(self.start_sequencec):
             if self.BBA_rule_step_in():
                 if self.VVR_rule_out():
                     if last==-1:
@@ -300,6 +300,18 @@ class VVR_Simulator():
                             return self.rewards[1]
                 else:
                     return self.rewards[2]
+            else:
+                return self.rewards[2]
+        else:
+            if self.VVR_rule_out():
+                if last==-1:
+                    return self.rewards[0]
+                else:
+                    if last==self.last_color:
+                        return self.rewards[0]
+                    else:
+                        print('color is changed')
+                        return self.rewards[1]
             else:
                 return self.rewards[2]
 

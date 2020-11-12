@@ -44,9 +44,8 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
 
-booth_num=1
 
-parser.add_argument('--exact_orders', default='test/distribute_result_s6_{}.csv'.format(booth_num), metavar='SAVE',
+parser.add_argument('--exact_orders', default='test/distribute_result_s6_0.csv', metavar='SAVE',
                     help='address for saving trained models')
 
 # parser.add_argument('--name', default='2dnorm_sample_shaped_nc', metavar='name',
@@ -133,128 +132,134 @@ def find_in(A, B, eps=0.2):
 ################# Control Frontier #################
 if __name__ == '__main__':
     args = parser.parse_args()
-    # setup the environment
-    env = MultiObjectiveEnv(args)
-    # torch.cuda.set_device(1)
-    # get state / action / reward sizes
-    state_size = len(env.state_spec)
-    action_size = env.action_spec[2][1] - env.action_spec[2][0]
-    reward_size = len(env.reward_spec)
-    # record the result to csv
-    record_data=[]
-    record_order_m=[]
-    record_order_c=[]
-    # generate an agent for initial training
-    agent = None
 
-    from crl.envelope.meta import MetaAgent
-    from crl.envelope.models import get_new_model
+    for booth_num in range(2):
+        args.exact_orders='test/distribute_result_s6_{}.csv'.format(booth_num)
+        # setup the environment
+        env = MultiObjectiveEnv(args)
+        # torch.cuda.set_device(1)
+        # get state / action / reward sizes
+        state_size = len(env.state_spec)
+        action_size = env.action_spec[2][1] - env.action_spec[2][0]
+        reward_size = len(env.reward_spec)
+        # record the result to csv
+        record_data=[]
+        record_order_m=[]
+        record_order_c=[]
+        # generate an agent for initial training
+        agent = None
 
-
-    model = get_new_model(args.model, state_size, action_size, reward_size)
-    agent = MetaAgent(model, args, is_train=True)
-
-
-    state_size = len(env.state_spec)
-    action_size = env.action_spec[2][1] - env.action_spec[2][0]
-    reward_size = len(env.reward_spec)
-
-    model = get_new_model(args.model, state_size, action_size, reward_size)
-    dicts=torch.load("{}{}.pth.tar".format(args.save,"m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
-    # dicts=torch.load("{}{}.pth.tar".format(args.save,"m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
-
-    model.load_state_dict(dicts['state_dict'])
-    agent = MetaAgent(model, args, is_train=False)
-
-    # compute opt
-    opt_x = []
-    opt_y = []
-    q_x = []
-    q_y = []
-    act_x = []
-    act_y = []
-    ws=np.arange(0,110)/100
-    opt_x,opt_y = read_result(args.bench_csv)
-    for i in range(5):  # $used to be 2000
-        print('doing test {}'.format(i))
-
-        w=i/10.0
-        w=[w, 1-w]
+        from crl.envelope.meta import MetaAgent
+        from crl.envelope.models import get_new_model
 
 
-        # w = np.random.randn(2)
-        w = np.abs(w) / np.linalg.norm(w, ord=1)
-        # w = np.random.dirichlet(np.ones(2))
-        w_e = w / np.linalg.norm(w, ord=2)
-        # if args.method == 'crl-naive' or args.method == 'crl-envelope':
-        #     hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor))
-        # elif args.method == 'crl-energy':
-        #     hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor), alpha=1e-5)
-        # realc = real_sol.dot(w).max() * w_e
-        # qc = w_e
-        # if args.method == 'crl-naive':
-        #     qc = hq.data[0] * w_e
-        # elif args.method == 'crl-envelope':
-        #     qc = w.dot(hq.data.cpu().numpy().squeeze()) * w_e
-        # elif args.method == 'crl-energy':
-        #     qc = w.dot(hq.data.cpu().numpy().squeeze()) * w_e
-        ttrw = np.array([0.0, 0.0])
-        terminal = False
-        env.reset()
-        cnt = 0
-        r_m=[]
-        r_c=[]
-        while not terminal:
-            state = env.observe()
-            mask = env.env.get_action_out_mask()
-            action = agent.act(state, preference=torch.from_numpy(w).type(FloatTensor), mask=mask)
-            next_state, reward, terminal = env.step(action)
-            reward[0]=env.env.stepcc
-            # reward[1]=env.env.get_distortion()
-            # reward[1]=-reward[1]
-            reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
-            if cnt > env.env.orders_num-50:
+        model = get_new_model(args.model, state_size, action_size, reward_size)
+        agent = MetaAgent(model, args, is_train=True)
 
-                terminal = True
-            ttrw = ttrw + reward #* np.power(args.gamma, cnt)
-            r_c.append(env.env.last_color)
-            r_m.append(env.env.last_model)
-            cnt += 1
-        # ttrw_w = w.dot(ttrw) * w_e
-        record_order_c.append(r_c)
-        record_order_m.append(r_m)
-        # q_x.append(qc[0])
-        # q_y.append(qc[1])
-        act_x.append(ttrw[0])
-        act_y.append(ttrw[1])
 
-        record_data.append(ttrw)
-    trace_opt = dict(x=act_x,
-                     y=act_y,
-                     mode="markers",
-                     type='custom',
-                     marker=dict(
-                         symbol="circle",
-                         size=3),
-                     name='real')
+        state_size = len(env.state_spec)
+        action_size = env.action_spec[2][1] - env.action_spec[2][0]
+        reward_size = len(env.reward_spec)
 
-    act_opt = dict(x=opt_x,
-                   y=opt_y,
-                   mode="markers",
-                   type='custom',
-                   marker=dict(
-                       symbol="circle",
-                       size=3),
-                   name='policy')
-    layout_opt = dict(title="FT Control Frontier - {} {}()".format(
-        args.method, args.name),
-        xaxis=dict(title='1st objective'),
-        yaxis=dict(title='2nd objective'))
-    vis._send({'data': [trace_opt, act_opt], 'layout': layout_opt})
-    df=pd.DataFrame.from_records(record_data)
-    dfc=pd.DataFrame.from_records(record_order_c)
-    dfm=pd.DataFrame.from_records(record_order_m)
+        model = get_new_model(args.model, state_size, action_size, reward_size)
+        dicts=torch.load("{}{}.pth.tar".format(args.save,"m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
+        # dicts=torch.load("{}{}.pth.tar".format(args.save,"m.{}_e.{}_n.{}".format(args.model, args.env_name, args.name)))
 
-    dfc.to_csv('result_order_c_{}.csv'.format(args.name, booth_num))
-    dfm.to_csv('result_order_m_{}.csv'.format(args.name, booth_num))
-    df.to_csv('result_{}.csv'.format(args.name))
+        model.load_state_dict(dicts['state_dict'])
+        agent = MetaAgent(model, args, is_train=False)
+
+        # compute opt
+        opt_x = []
+        opt_y = []
+        q_x = []
+        q_y = []
+        act_x = []
+        act_y = []
+        ws=np.arange(0,110)/100
+        run_times=10
+        opt_x,opt_y = read_result(args.bench_csv)
+
+        for i in range(run_times):  # $used to be 2000
+            print('doing test {}'.format(i))
+            w=i/(run_times/1.0)
+            w=[w, 1-w]
+            # w = np.random.randn(2)
+            w = np.abs(w) / np.linalg.norm(w, ord=1)
+            # w = np.random.dirichlet(np.ones(2))
+            w_e = w / np.linalg.norm(w, ord=2)
+            # if args.method == 'crl-naive' or args.method == 'crl-envelope':
+            #     hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor))
+            # elif args.method == 'crl-energy':
+            #     hq, _ = agent.predict(torch.from_numpy(w).type(FloatTensor), alpha=1e-5)
+            # realc = real_sol.dot(w).max() * w_e
+            # qc = w_e
+            # if args.method == 'crl-naive':
+            #     qc = hq.data[0] * w_e
+            # elif args.method == 'crl-envelope':
+            #     qc = w.dot(hq.data.cpu().numpy().squeeze()) * w_e
+            # elif args.method == 'crl-energy':
+            #     qc = w.dot(hq.data.cpu().numpy().squeeze()) * w_e
+            ttrw = np.array([0.0, 0.0])
+            terminal = False
+            env.reset()
+            cnt = 0
+            r_m=[]
+            r_c=[]
+            while not terminal:
+                state = env.observe()
+                mask = env.env.get_action_out_mask()
+                action = agent.act(state, preference=torch.from_numpy(w).type(FloatTensor), mask=mask)
+                next_state, reward, terminal = env.step(action)
+                reward[0]=env.env.stepcc
+                # reward[1]=env.env.get_distortion()
+                # reward[1]=-reward[1]
+                reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
+                if cnt > env.env.orders_num-50:
+
+                    terminal = True
+                ttrw = ttrw + reward #* np.power(args.gamma, cnt)
+                r_c.append(env.env.last_color)
+                r_m.append(env.env.last_model)
+                cnt += 1
+            # ttrw_w = w.dot(ttrw) * w_e
+            record_order_c.append(r_c)
+            record_order_m.append(r_m)
+            # q_x.append(qc[0])
+            # q_y.append(qc[1])
+            act_x.append(ttrw[0])
+            act_y.append(ttrw[1])
+
+            record_data.append(ttrw)
+        trace_opt = dict(x=act_x,
+                         y=act_y,
+                         mode="markers",
+                         type='custom',
+                         marker=dict(
+                             symbol="circle",
+                             size=3),
+                         name='real')
+
+        act_opt = dict(x=opt_x,
+                       y=opt_y,
+                       mode="markers",
+                       type='custom',
+                       marker=dict(
+                           symbol="circle",
+                           size=3),
+                       name='policy')
+        layout_opt = dict(title="FT Control Frontier - {} {}()".format(
+            args.method, args.name),
+            xaxis=dict(title='1st objective'),
+            yaxis=dict(title='2nd objective'))
+        vis._send({'data': [trace_opt, act_opt], 'layout': layout_opt})
+        df=pd.DataFrame.from_records(record_data)
+        dfc=pd.DataFrame.from_records(record_order_c)
+        dfm=pd.DataFrame.from_records(record_order_m)
+
+        d2w=[[(rm,rc) for rm,rc  in zip(record_order_m[i],record_order_c[i])] for i in range(run_times)]
+        for i,d in enumerate(d2w):
+            dd=pd.DataFrame.from_records(d)
+            dd.to_csv('chaptersix_result/result_order_{}_{}.csv'.format(booth_num,i))
+        # dfc.to_csv('result_order_c_{}.csv'.format(args.name, booth_num))
+        # dfm.to_csv('result_order_m_{}.csv'.format(args.name, booth_num))
+        df.to_csv('result_{}_booth{}.csv'.format(args.name, booth_num))
