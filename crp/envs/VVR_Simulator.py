@@ -27,6 +27,7 @@ class VVR_Simulator():
         #     cc=args.cc
         # else:
         #     self.orders_num=300
+        # self.orders_num=500
 
 
 
@@ -284,10 +285,9 @@ class VVR_Simulator():
                 return self.release(l,c)
 
 
-
     def step_forward_out_semi_rl(self):
         last = self.last_color
-        if len(self.start_sequencec):
+        if 1:
             if self.BBA_rule_step_in():
                 if self.VVR_rule_out():
                     if last==-1:
@@ -302,18 +302,36 @@ class VVR_Simulator():
                     return self.rewards[2]
             else:
                 return self.rewards[2]
-        else:
-            if self.VVR_rule_out():
-                if last==-1:
-                    return self.rewards[0]
-                else:
-                    if last==self.last_color:
-                        return self.rewards[0]
-                    else:
-                        print('color is changed')
-                        return self.rewards[1]
-            else:
-                return self.rewards[2]
+
+    # def step_forward_out_semi_rl(self):
+    #     last = self.last_color
+    #     if len(self.start_sequencec):
+    #         if self.BBA_rule_step_in():
+    #             if self.VVR_rule_out():
+    #                 if last==-1:
+    #                     return self.rewards[0]
+    #                 else:
+    #                     if last==self.last_color:
+    #                         return self.rewards[0]
+    #                     else:
+    #                         print('color is changed')
+    #                         return self.rewards[1]
+    #             else:
+    #                 return self.rewards[2]
+    #         else:
+    #             return self.rewards[2]
+    #     else:
+    #         if self.VVR_rule_out():
+    #             if last==-1:
+    #                 return self.rewards[0]
+    #             else:
+    #                 if last==self.last_color:
+    #                     return self.rewards[0]
+    #                 else:
+    #                     print('color is changed')
+    #                     return self.rewards[1]
+    #         else:
+    #             return self.rewards[2]
 
 
     def BBA_rule_step_in(self):
