@@ -1,14 +1,14 @@
 from __future__ import absolute_import, division, print_function
-import argparse
-import visdom
-import torch
-import numpy as np
-from sklearn.manifold import TSNE
-from read_result import read_result
-import pandas as pd
 
-import sys
+import argparse
 import os
+import sys
+
+import numpy as np
+import pandas as pd
+import torch
+import visdom
+from read_result import read_result
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
@@ -43,9 +43,10 @@ parser.add_argument('--pltdemo', default=False, action='store_true',
 # LOG & SAVING
 parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
                     help='address for saving trained models')
-parser.add_argument('--exact_orders', default='test/distribute_result_s6_1.csv', metavar='SAVE',
-                    help='address for saving trained models')
-parser.add_argument('--exact_orders2', default='test/distribute_result_s6_0.csv', metavar='SAVE',
+
+booth_num=0
+
+parser.add_argument('--exact_orders', default='test/distribute_result_s6_{}.csv'.format(booth_num), metavar='SAVE',
                     help='address for saving trained models')
 
 parser.add_argument('--name', default='2dnorm_sample_shaped_nc', metavar='name',
@@ -174,7 +175,7 @@ if __name__ == '__main__':
     act_y = []
     ws=np.arange(0,110)/100
     opt_x,opt_y = read_result(args.bench_csv)
-    for i in range(10):  # $used to be 2000
+    for i in range(5):  # $used to be 2000
         print('doing test {}'.format(i))
 
         w=i/10.0
@@ -254,6 +255,6 @@ if __name__ == '__main__':
     dfc=pd.DataFrame.from_records(record_order_c)
     dfm=pd.DataFrame.from_records(record_order_m)
 
-    dfc.to_csv('result_order_c_1.csv'.format(args.name))
-    dfm.to_csv('result_order_m_1.csv'.format(args.name))
+    dfc.to_csv('result_order_c_{}.csv'.format(args.name, booth_num))
+    dfm.to_csv('result_order_m_{}.csv'.format(args.name, booth_num))
     df.to_csv('result_{}.csv'.format(args.name))
