@@ -67,16 +67,16 @@ class VVR_Simulator():
 
 
     def reset(self):
-        if self.args.eval:
-            self.fix_models, self.fix_colors = self.read_in_orders(self.args.exact_orders)
-        else:
-            if np.random.uniform(0,1)>0.5:
-                self.fix_models, self.fix_colors=self.read_in_orders(self.args.exact_orders)
-            else:
-                self.fix_models, self.fix_colors = self.read_in_orders(self.args.exact_orders2)
+        # if self.args.eval:
+        self.fix_models, self.fix_colors = self.read_in_orders(self.args.exact_orders)
+        # else:
+        #     if np.random.uniform(0,1)>0.5:
+        #         self.fix_models, self.fix_colors=self.read_in_orders(self.args.exact_orders)
+        #     else:
+        #         self.fix_models, self.fix_colors = self.read_in_orders(self.args.exact_orders2)
         self.start_sequencec = self.fix_colors[:]
         self.start_sequencem = self.fix_models[:]
-        self.orders_num=500#len(self.fix_models)
+        self.orders_num=len(self.fix_models)
         # self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
         # self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
         # if self.color_dist_file is not None:
@@ -209,10 +209,10 @@ class VVR_Simulator():
         # step=1
 
         # reward.append((2-self.get_distortion()/100))
-        reward.append((2-self.get_distortion()/100))
+        reward.append((2-self.get_distortion(tollerance=20)/50))
         # reward.append(-self.get_distortion(absolute=True, tollerance=0)/10)
         self.current_state=self.observe()
-        if len(self.start_sequencec)<self.capacity:
+        if len(self.start_sequencec)<1:
             self.terminal=True
         return self.current_state, np.stack(reward), self.terminal
 
@@ -287,7 +287,7 @@ class VVR_Simulator():
 
     def step_forward_out_semi_rl(self):
         last = self.last_color
-        if 1:
+        if len(self.start_sequencec):
             if self.BBA_rule_step_in():
                 if self.VVR_rule_out():
                     if last==-1:
@@ -300,6 +300,18 @@ class VVR_Simulator():
                             return self.rewards[1]
                 else:
                     return self.rewards[2]
+            else:
+                return self.rewards[2]
+        else:
+            if self.VVR_rule_out():
+                if last==-1:
+                    return self.rewards[0]
+                else:
+                    if last==self.last_color:
+                        return self.rewards[0]
+                    else:
+                        print('color is changed')
+                        return self.rewards[1]
             else:
                 return self.rewards[2]
 
