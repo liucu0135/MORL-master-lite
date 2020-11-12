@@ -254,6 +254,6 @@ if __name__ == '__main__':
     dfc=pd.DataFrame.from_records(record_order_c)
     dfm=pd.DataFrame.from_records(record_order_m)
 
-    dfc.to_csv('result_order_c_0.csv'.format(args.name))
-    dfm.to_csv('result_order_m_0.csv'.format(args.name))
+    dfc.to_csv('result_order_c_1.csv'.format(args.name))
+    dfm.to_csv('result_order_m_1.csv'.format(args.name))
     df.to_csv('result_{}.csv'.format(args.name))
