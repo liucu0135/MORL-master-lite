@@ -176,7 +176,7 @@ if __name__ == '__main__':
         act_x = []
         act_y = []
         ws=np.arange(0,110)/100
-        run_times=10
+        run_times=100
         opt_x,opt_y = read_result(args.bench_csv)
 
         for i in range(run_times):  # $used to be 2000
