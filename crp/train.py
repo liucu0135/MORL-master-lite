@@ -184,7 +184,7 @@ if __name__ == '__main__':
     # setup the environment
     args.cc=False
     env = MultiObjectiveEnv(args)
-    torch.cuda.set_device(1)
+    torch.cuda.set_device(0)
     # get state / action / reward sizes
     state_size = len(env.state_spec)
     action_size = env.action_spec[2][1] - env.action_spec[2][0]
