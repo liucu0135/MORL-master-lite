@@ -213,7 +213,7 @@ if __name__ == '__main__':
                 reward[0]=env.env.stepcc
                 # reward[1]=env.env.get_distortion()
                 # reward[1]=-reward[1]
-                reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
+                reward[1]=env.env.get_distortion(absolute=True, tollerance=20)/10
                 if cnt > env.env.orders_num-50:
                     terminal = True
                 ttrw = ttrw + reward #* np.power(args.gamma, cnt)
