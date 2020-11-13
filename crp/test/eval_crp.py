@@ -48,8 +48,8 @@ parser.add_argument('--save', default='crl/envelope/saved2/', metavar='SAVE',
 parser.add_argument('--exact_orders', default='test/distribute_result_s6_0.csv', metavar='SAVE',
                     help='address for saving trained models')
 
-# parser.add_argument('--name', default='2dnorm_sample_shaped_nc', metavar='name',
-parser.add_argument('--name', default='sixchpt_nc', metavar='name',
+parser.add_argument('--name', default='2dnorm_sample_shaped_nc', metavar='name',
+# parser.add_argument('--name', default='sixchpt_nc', metavar='name',
                     help='specify a name for saving the model')
 # Useless but I am too laze to delete them
 parser.add_argument('--mem_size', type=int, default=1000, metavar='M',
@@ -215,7 +215,6 @@ if __name__ == '__main__':
                 # reward[1]=-reward[1]
                 reward[1]=env.env.get_distortion(absolute=True, tollerance=0)/10
                 if cnt > env.env.orders_num-50:
-
                     terminal = True
                 ttrw = ttrw + reward #* np.power(args.gamma, cnt)
                 r_c.append(env.env.last_color)
@@ -262,4 +261,4 @@ if __name__ == '__main__':
             dd.to_csv('chaptersix_result/result_order_{}_{}.csv'.format(booth_num,i))
         # dfc.to_csv('result_order_c_{}.csv'.format(args.name, booth_num))
         # dfm.to_csv('result_order_m_{}.csv'.format(args.name, booth_num))
-        df.to_csv('result_{}_booth{}.csv'.format(args.name, booth_num))
+        df.to_csv('chaptersix_result/result_{}_booth{}.csv'.format(args.name, booth_num))

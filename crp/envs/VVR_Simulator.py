@@ -75,8 +75,8 @@ class VVR_Simulator():
         #         self.fix_models, self.fix_colors=self.read_in_orders(self.args.exact_orders)
         #     else:
         #         self.fix_models, self.fix_colors = self.read_in_orders(self.args.exact_orders2)
-        self.start_sequencec = self.fix_colors[:]
-        self.start_sequencem = self.fix_models[:]
+        self.start_sequencec = self.fix_colors[::-1]
+        self.start_sequencem = self.fix_models[::-1]
         self.orders_num=len(self.fix_models)
         # self.start_sequencec = np.random.choice(range(self.num_color), self.orders_num).tolist()
         # self.start_sequencem = np.random.choice(range(self.num_model), self.orders_num).tolist()
@@ -213,7 +213,7 @@ class VVR_Simulator():
         reward.append((2-self.get_distortion(tollerance=20)/50))
         # reward.append(-self.get_distortion(absolute=True, tollerance=0)/10)
         self.current_state=self.observe()
-        if len(self.start_sequencec)<1:
+        if len(self.start_sequencec)<2:
             self.terminal=True
         return self.current_state, np.stack(reward), self.terminal
 
